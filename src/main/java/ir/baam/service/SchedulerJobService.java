@@ -3,6 +3,7 @@ package ir.baam.service;
 import java.util.Date;
 import java.util.List;
 
+import ir.baam.enumeration.JobStatusEnum;
 import ir.baam.job.SampleCronJob;
 import ir.baam.job.SimpleJob;
 import ir.baam.repository.SchedulerRepository;
@@ -71,7 +72,7 @@ public class SchedulerJobService {
     public boolean pauseJob(SchedulerJobInfo jobInfo) {
         try {
             SchedulerJobInfo getJobInfo = schedulerRepository.findByJobName(jobInfo.getJobName());
-            getJobInfo.setJobStatus("PAUSED");
+            getJobInfo.setJobStatus(JobStatusEnum.PAUSED.getValue());
             schedulerRepository.save(getJobInfo);
             schedulerFactoryBean.getScheduler().pauseJob(new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup()));
             log.info(">>>>> jobName = [" + jobInfo.getJobName() + "]" + " paused.");
@@ -85,7 +86,7 @@ public class SchedulerJobService {
     public boolean resumeJob(SchedulerJobInfo jobInfo) {
         try {
             SchedulerJobInfo getJobInfo = schedulerRepository.findByJobName(jobInfo.getJobName());
-            getJobInfo.setJobStatus("RESUMED");
+            getJobInfo.setJobStatus(JobStatusEnum.RESUMED.getValue());
             schedulerRepository.save(getJobInfo);
             schedulerFactoryBean.getScheduler().resumeJob(new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup()));
             log.info(">>>>> jobName = [" + jobInfo.getJobName() + "]" + " resumed.");
@@ -99,7 +100,7 @@ public class SchedulerJobService {
     public boolean startJobNow(SchedulerJobInfo jobInfo) {
         try {
             SchedulerJobInfo getJobInfo = schedulerRepository.findByJobName(jobInfo.getJobName());
-            getJobInfo.setJobStatus("SCHEDULED & STARTED");
+            getJobInfo.setJobStatus(JobStatusEnum.SCHEDULED_AND_STARTED.getValue());
             schedulerRepository.save(getJobInfo);
             schedulerFactoryBean.getScheduler().triggerJob(new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup()));
             log.info(">>>>> jobName = [" + jobInfo.getJobName() + "]" + " scheduled and started now.");
@@ -154,7 +155,7 @@ public class SchedulerJobService {
                             jobInfo.getRepeatTime(), SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
                 }
                 scheduler.scheduleJob(jobDetail, trigger);
-                jobInfo.setJobStatus("SCHEDULED");
+                jobInfo.setJobStatus(JobStatusEnum.SCHEDULED.getValue());
                 schedulerRepository.save(jobInfo);
                 log.info(">>>>> jobName = [" + jobInfo.getJobName() + "]" + " scheduled.");
             } else {
@@ -178,7 +179,7 @@ public class SchedulerJobService {
         }
         try {
             schedulerFactoryBean.getScheduler().rescheduleJob(TriggerKey.triggerKey(jobInfo.getJobName()), newTrigger);
-            jobInfo.setJobStatus("EDITED & SCHEDULED");
+            jobInfo.setJobStatus(JobStatusEnum.EDITED_AND_SCHEDULED.getValue());
             schedulerRepository.save(jobInfo);
             log.info(">>>>> jobName = [" + jobInfo.getJobName() + "]" + " updated and scheduled.");
         } catch (SchedulerException e) {
