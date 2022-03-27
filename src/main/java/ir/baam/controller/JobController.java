@@ -39,14 +39,12 @@ public class JobController {
 
 	@RequestMapping("/metaData")
 	public Object metaData() throws SchedulerException {
-		SchedulerMetaData metaData = scheduleJobService.getMetaData();
-		return metaData;
+		return scheduleJobService.getMetaData();
 	}
 
 	@RequestMapping("/getAllJobs")
 	public Object getAllJobs() throws SchedulerException {
-		List<SchedulerJobInfo> jobList = scheduleJobService.getAllJobList();
-		return jobList;
+		return scheduleJobService.getAllJobList();
 	}
 
 	@RequestMapping(value = "/runJob", method = { RequestMethod.GET, RequestMethod.POST })
