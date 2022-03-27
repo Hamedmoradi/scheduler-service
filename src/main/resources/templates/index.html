@@ -41,6 +41,7 @@
 					<th>Crons</th>
 					<th>State</th>
 					<th>Description</th>
+					<th>service Type</th>
 					<!-- <th>interface</th> -->
 					<th style="text-align: center;">Operation</th>
 				</tr>
@@ -53,6 +54,7 @@
 					<td th:id="${'cron_' + item.jobId}" th:text="${item.cronExpression}"></td>
 					<td th:id="${'status_' + item.jobId}" th:text="${item.jobStatus}"></td>
 					<td th:id="${'desc_' + item.jobId}" th:text="${item.desc}"></td>
+					<td th:id="${'serviceType_' + item.jobId}" th:text="${item.serviceType}"></td>
 					<!-- <td>$!item.interfaceName</td> -->
 					<td style="text-align: center;">
 						<div class="btn-group text-center" role="group"
@@ -103,6 +105,14 @@
 							<div class="input-group">
 								<span class="input-group-addon">Job Description</span> 
 								<input type="text" alias="no-edit" name="desc" class="form-control" id="edit_desc" />
+							</div>
+							<div class="input-group">
+								<span class="input-group-addon">service Type</span>
+								<select name="serviceType" id="serviceType" class="form-control">
+									<option value="RECURRING">RECURRING</option>
+									<option value="BATCH">BATCH</option>
+									<option value="INDIRECT_BATCH">INDIRECT_BATCH</option>
+								</select>
 							</div>
 						</div>
 					</form>
