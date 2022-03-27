@@ -29,4 +29,5 @@ public class SchedulerJobInfo {
     private String interfaceName;
     private Long repeatTime;
     private Boolean cronJob;
+    private String ServiceType;
 }

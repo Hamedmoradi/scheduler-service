@@ -129,6 +129,7 @@ public class SchedulerJobService {
         }
         scheduleJob.setDesc("i am job number " + scheduleJob.getJobId());
         scheduleJob.setInterfaceName("interface_" + scheduleJob.getJobId());
+        scheduleJob.setServiceType(scheduleJob.getServiceType());
         log.info(">>>>> jobName = [" + scheduleJob.getJobName() + "]" + " created.");
     }
 
@@ -180,6 +181,7 @@ public class SchedulerJobService {
         try {
             schedulerFactoryBean.getScheduler().rescheduleJob(TriggerKey.triggerKey(jobInfo.getJobName()), newTrigger);
             jobInfo.setJobStatus(JobStatusEnum.EDITED_AND_SCHEDULED.getValue());
+            jobInfo.setServiceType(jobInfo.getServiceType());
             schedulerRepository.save(jobInfo);
             log.info(">>>>> jobName = [" + jobInfo.getJobName() + "]" + " updated and scheduled.");
         } catch (SchedulerException e) {
