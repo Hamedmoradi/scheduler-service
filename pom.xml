@@ -13,6 +13,13 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-boot-quartz</name>
 	<description>Spring Boot app to demonstrate the working of Quartz Scheduler</description>
+	<developers>
+		<developer>
+			<name>ha.moradi</name>
+			<email>hamedmoradi.mailsbox@gmail.com</email>
+			<url>https://github.com/hamedmoradi</url>
+		</developer>
+	</developers>
 	<properties>
 		<java.version>11</java.version>
 		<audit-log-version>1.0.0.RELEASE</audit-log-version>
@@ -56,7 +63,28 @@
 		</dependency>
 	</dependencies>
 	<build>
+		<finalName>scheduler-service</finalName>
 		<plugins>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.1.4</version>
+				<configuration>
+					<to>
+						<image>repo.sadad.co.ir/repository/baam-docker-registry/scheduler-service</image>
+						<tags>
+							<tag>${project.version}</tag>
+							<tag>latest</tag>
+						</tags>
+					</to>
+					<container>
+						<ports>
+							<port>9026</port>
+							<port>9026</port>
+						</ports>
+					</container>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -71,4 +99,76 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.0.1</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>3.0.0</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	<scm>
+		<connection>scm:git:https://vcs.sadad.co.ir/scm/payment/bmi-api.git</connection>
+		<developerConnection>scm:git:https://vcs.sadad.co.ir/scm/payment/bmi-api.git
+		</developerConnection>
+		<url>https://vcs.sadad.co.ir/scm/payment/bmi-api.git</url>
+	</scm>
+	<distributionManagement>
+		<repository>
+			<id>groups-public</id>
+			<name>Nexus Releases</name>
+			<url>https://repo.sadad.co.ir/repository/baam-maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>groups-public</id>
+			<name>Nexus Snapshot</name>
+			<url>https://repo.sadad.co.ir/repository/baam-maven-snapshots/</url>
+		</snapshotRepository>
+		<site>
+			<id>groups-public</id>
+			<name>Nexus Sites</name>
+			<url>https://repo.sadad.co.ir/repository/baam-maven-group/</url>
+		</site>
+	</distributionManagement>
 </project>
