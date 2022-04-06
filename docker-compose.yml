@@ -1,0 +1,8 @@
+version: '3'
+services:
+  scheduler-service:
+    image:  repo.sadad.co.ir/repository/baam-docker-registry/scheduler-service:latest
+    container_name: scheduler-service
+    restart: always
+    ports:
+      - "9026:9026"
