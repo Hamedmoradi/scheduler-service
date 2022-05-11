@@ -53,7 +53,7 @@
 					<td th:id="${'group_' + item.jobId}" th:text="${item.jobGroup}"></td>
 					<td th:id="${'cron_' + item.jobId}" th:text="${item.cronExpression}"></td>
 					<td th:id="${'status_' + item.jobId}" th:text="${item.jobStatus}"></td>
-					<td th:id="${'desc_' + item.jobId}" th:text="${item.desc}"></td>
+					<td th:id="${'description_' + item.jobId}" th:text="${item.description}"></td>
 					<td th:id="${'serviceType_' + item.jobId}" th:text="${item.serviceType}"></td>
 					<!-- <td>$!item.interfaceName</td> -->
 					<td style="text-align: center;">
@@ -104,7 +104,7 @@
 							</div>
 							<div class="input-group">
 								<span class="input-group-addon">Job Description</span> 
-								<input type="text" alias="no-edit" name="desc" class="form-control" id="edit_desc" />
+								<input type="text" alias="no-edit" name="description" class="form-control" id="edit_description" />
 							</div>
 							<div class="input-group">
 								<span class="input-group-addon">service Type</span>
