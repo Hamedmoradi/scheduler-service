@@ -1,10 +1,6 @@
 package ir.baam.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,15 +15,17 @@ public class SchedulerJobInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String jobId;
+    @Column(name = "id", nullable = false, insertable = true, updatable = true)
+    private Long id;
     private String jobName;
     private String jobGroup;
     private String jobStatus;
     private String jobClass;
     private String cronExpression;
-    private String desc;    
+    private String description;
     private String interfaceName;
     private Long repeatTime;
     private Boolean cronJob;
-    private String ServiceType;
+    private String serviceType;
+    private String command;
 }
