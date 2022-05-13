@@ -1,11 +1,14 @@
 package ir.baam.job;
 
+import java.util.Date;
 import java.util.stream.IntStream;
 
+import ir.baam.domain.SchedulerCommand;
 import ir.baam.domain.SchedulerJobInfo;
-import ir.baam.enumeration.JobServicesEnum;
-import ir.baam.enumeration.JobStatusEnum;
+import ir.baam.enumeration.CommandEnumeration;
+import ir.baam.enumeration.RecurringTransactionStatusEnum;
 import ir.baam.repository.SchedulerRepository;
+import ir.bmi.identity.security.BmiOAuth2User;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -14,13 +17,8 @@ import org.springframework.http.*;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.Base64Utils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 @DisallowConcurrentExecution
@@ -36,15 +34,32 @@ public class SampleCronJob extends QuartzJobBean {
         String triggerName = context.getTrigger().getJobKey().getName();
         SchedulerJobInfo schedulerJobInfo = schedulerRepository.findByJobName(triggerName);
         log.info("SampleCronJob Start................");
-        if (schedulerJobInfo.getServiceType().equals("RECURRING")) {
+        if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.INITIATE.getValue())) {
             log.info("send a request to standing-order service");
-       apiCall("hello","http://localhost:9027/standing-order/execute/");
+            Date date = new Date();
+            SchedulerCommand schedulerCommand = new SchedulerCommand(date,CommandEnumeration.INITIATE.getValue(),null, RecurringTransactionStatusEnum.PENDING.value());
+            apiCall(schedulerCommand,"http://localhost:9027/runningScheduler/payment/initiate");
         } else {
             IntStream.range(0, 10).forEach(i -> {
                 log.info("Counting - {}", i);
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException e) {
+                }  catch (InterruptedException e) {
+                    log.error(e.getMessage(), e);
+                }
+            });
+        }
+        if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.EXECUTE.getValue())) {
+            log.info("send a request to standing-order service");
+            Date date = new Date();
+            SchedulerCommand schedulerCommand = new SchedulerCommand(date,CommandEnumeration.EXECUTE.getValue(),null, RecurringTransactionStatusEnum.PROCESSING.value());
+            apiCall(schedulerCommand,"http://localhost:9027/runningScheduler/payment/execution");
+        } else {
+            IntStream.range(0, 10).forEach(i -> {
+                log.info("Counting - {}", i);
+                try {
+                    Thread.sleep(1000);
+                }  catch (InterruptedException e) {
                     log.error(e.getMessage(), e);
                 }
             });
@@ -52,12 +67,20 @@ public class SampleCronJob extends QuartzJobBean {
         log.info("SampleCronJob End................");
     }
 
-    private void apiCall(String message, String url) {
+
+    //TODO if connection has been lost raise exception and reschedule
+
+
+    private BmiOAuth2User extractMyoAuth() {
+        return (BmiOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+    private void apiCall(SchedulerCommand message, String url) {
         HttpHeaders headers = new HttpHeaders();
-//        headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> request = new HttpEntity<String>(message, headers);
+        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+        headers.setBearerAuth(extractMyoAuth().getAttribute("ACCESS_TOKEN_VALUE").toString());
+        HttpEntity<SchedulerCommand> request = new HttpEntity<SchedulerCommand>(message, headers);
+        RestTemplate restTemplate=new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
     }
-
 }
