@@ -29,6 +29,9 @@ public class SampleCronJob extends QuartzJobBean {
     RestTemplate restTemplate=new RestTemplate();
 
 
+    public static final String TOKEN="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJncmFudCI6IlBBU1NXT1JEIiwiaXNzIjoiaHR0cDovL2FwaS5ibWkuaXIvc2VjdXJpdHkiLCJhdWQiOiJrZXkiLCJleHAiOjE2NTI1NTYyMTQ0NzIsIm5iZiI6MTY1MjQ2OTgxNDQ3Miwicm9sZSI6ImludGVybmV0IGJhbmstY3VzdG9tZXIiLCJzZXJpYWwiOiJmMWQyNGRkYS05NThhLTMzZjAtYTcxZC0yOGMxYjFiMTc1MTAiLCJzc24iOiIzOTIwMTgzNTg0IiwiY2xpZW50X2lkIjoiMTIzIiwic2NvcGVzIjpbImFjY291bnQtc3VwZXIiLCJ0cmFuc2FjdGlvbiIsInNzby1tYW5hZ2VyLWN1c3RvbWVyIiwic3NvLW1hbmFnZXItZW5yb2xsbWVudCIsImN1c3RvbWVyLXN1cGVyIl19.iqBrXrhe92z47FLl3KB6DFV6cx7TbZSSjxKBNYIufa4";
+
+
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         String triggerName = context.getTrigger().getJobKey().getName();
@@ -38,7 +41,7 @@ public class SampleCronJob extends QuartzJobBean {
             log.info("send a request to standing-order service");
             Date date = new Date();
             SchedulerCommand schedulerCommand = new SchedulerCommand(date,CommandEnumeration.INITIATE.getValue(),null, RecurringTransactionStatusEnum.PENDING.value());
-            apiCall(schedulerCommand,"http://localhost:9027/runningScheduler/payment/initiate");
+            apiCall(schedulerCommand,"http://localhost:9027/standing-order/runningScheduler/payment/initiate");
         } else {
             IntStream.range(0, 10).forEach(i -> {
                 log.info("Counting - {}", i);
@@ -78,7 +81,9 @@ public class SampleCronJob extends QuartzJobBean {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-        headers.setBearerAuth(extractMyoAuth().getAttribute("ACCESS_TOKEN_VALUE").toString());
+
+//        headers.setBearerAuth(extractMyoAuth().getAttribute("ACCESS_TOKEN_VALUE").toString());
+        headers.setBearerAuth(TOKEN);
         HttpEntity<SchedulerCommand> request = new HttpEntity<SchedulerCommand>(message, headers);
         RestTemplate restTemplate=new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
