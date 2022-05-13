@@ -121,14 +121,14 @@ public class SchedulerJobService {
             scheduleJob.setCronJob(false);
             scheduleJob.setRepeatTime((long) 1);
         }
-        if (StringUtils.isEmpty(scheduleJob.getJobId())) {
+        if (StringUtils.isEmpty(scheduleJob.getId())) {
             log.info("Job Info: {}", scheduleJob);
             scheduleNewJob(scheduleJob);
         } else {
             updateScheduleJob(scheduleJob);
         }
-        scheduleJob.setDesc("i am job number " + scheduleJob.getJobId());
-        scheduleJob.setInterfaceName("interface_" + scheduleJob.getJobId());
+        scheduleJob.setDescription("i am job number " + scheduleJob.getId());
+        scheduleJob.setInterfaceName("interface_" + scheduleJob.getId());
         scheduleJob.setServiceType(scheduleJob.getServiceType());
         log.info(">>>>> jobName = [" + scheduleJob.getJobName() + "]" + " created.");
     }
