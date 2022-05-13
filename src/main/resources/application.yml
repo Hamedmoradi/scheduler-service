@@ -11,8 +11,7 @@ spring:
       configurer:
         enabled: true
 
-
-  standing-order-datasource:
+  scheduler-service-datasource:
     username: MT
     password: kjio0988
     jdbcUrl: jdbc:oracle:thin:@//172.30.41.22:1521/offpayapdb1
@@ -32,10 +31,7 @@ spring:
     url: jdbc:oracle:thin:@//172.30.41.22:1521/offpayapdb1
     locations: classpath:db/migration
 
-
-  thymeleaf:
-    enabled=false:management:
-    enabled: false
+management:
   endpoints:
     web:
       exposure:
@@ -55,7 +51,7 @@ logging:
 secretKeyLocation: /opt/configs
 bmi:
   oauth2:
-    excluded-urls: /index.html/**:*,/v3/api-docs/**,/swagger-ui/**:*,/h2/**:*,/swagger-ui.html:*,/webjars/**:*,/v2/**:*,/swagger-resources/**:*,/actuator/**:*,/actuator/prometheus/**:*,/trace/**:*,/enterprisebaamapi/h2/**:*,/enterprisebaamapi/swagger-ui.html:*,/enterprisebaamapi/webjars/**:*,/enterprisebaamapi/v2/**:*,/enterprisebaamapi/swagger-resources/**:*,/enterprisebaamapi/actuator/**:*,/enterprisebaamapi/actuator/prometheus/**:*,/enterprisebaamapi/trace/**:*
+    excluded-urls: /v3/api-docs/**,/swagger-ui/**:*,/h2/**:*,/swagger-ui.html:*,/webjars/**:*,/v2/**:*,/swagger-resources/**:*,/actuator/**:*,/actuator/prometheus/**:*,/trace/**:*,/enterprisebaamapi/h2/**:*,/enterprisebaamapi/swagger-ui.html:*,/enterprisebaamapi/webjars/**:*,/enterprisebaamapi/v2/**:*,/enterprisebaamapi/swagger-resources/**:*,/enterprisebaamapi/actuator/**:*,/enterprisebaamapi/actuator/prometheus/**:*,/enterprisebaamapi/trace/**:*
 
 feign:
   client:
