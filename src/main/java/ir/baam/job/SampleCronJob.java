@@ -38,7 +38,7 @@ public class SampleCronJob extends QuartzJobBean {
         SchedulerJobInfo schedulerJobInfo = schedulerRepository.findByJobName(triggerName);
         log.info("SampleCronJob Start................");
         if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.INITIATE.getValue())) {
-            log.info("send a request to standing-order service");
+            log.info("send a instruction request to standing-order service");
             Date date = new Date();
             SchedulerCommand schedulerCommand = new SchedulerCommand(date,CommandEnumeration.INITIATE.getValue(),null, RecurringTransactionStatusEnum.PENDING.value());
             apiCall(schedulerCommand,"http://localhost:9027/standing-order/runningScheduler/payment/initiate");
@@ -53,10 +53,10 @@ public class SampleCronJob extends QuartzJobBean {
             });
         }
         if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.EXECUTE.getValue())) {
-            log.info("send a request to standing-order service");
+            log.info("send a execute request to standing-order service");
             Date date = new Date();
             SchedulerCommand schedulerCommand = new SchedulerCommand(date,CommandEnumeration.EXECUTE.getValue(),null, RecurringTransactionStatusEnum.PROCESSING.value());
-            apiCall(schedulerCommand,"http://localhost:9027/runningScheduler/payment/execution");
+            apiCall(schedulerCommand,"http://localhost:9027/standing-order/runningScheduler/payment/execution");
         } else {
             IntStream.range(0, 10).forEach(i -> {
                 log.info("Counting - {}", i);

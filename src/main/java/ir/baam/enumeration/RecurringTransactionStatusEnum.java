@@ -4,10 +4,10 @@ import lombok.SneakyThrows;
 
 public enum RecurringTransactionStatusEnum {
 
-    START("START"),
-    PENDING("PENDING"),
-    PROCESSING("PROCESSING"),
-    FINISH("FINISH");
+    START("start"),
+    PENDING("pending"),
+    PROCESSING("processing"),
+    FINISH("finish");
 
     private String value;
 
