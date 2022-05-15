@@ -7,7 +7,9 @@ public enum RecurringTransactionStatusEnum {
     START("start"),
     PENDING("pending"),
     PROCESSING("processing"),
-    FINISH("finish");
+    FINISH("finish"),
+    INITIATION_FAILED("initiation_failed"),
+    FAILED("failed");
 
     private String value;
 

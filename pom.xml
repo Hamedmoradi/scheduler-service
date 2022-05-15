@@ -26,6 +26,7 @@
 		<oracle-driver.version>21.3.0.0</oracle-driver.version>
 		<spring-cloud.version>2020.0.3</spring-cloud.version>
 		<bmi-identity.version>1.2.0</bmi-identity.version>
+		<hazelcast.version>3.11.4</hazelcast.version>
 	</properties>
 	<dependencies>
 		<dependency>

@@ -26,10 +26,10 @@ public class SampleCronJob extends QuartzJobBean {
     @Autowired
     SchedulerRepository schedulerRepository;
 
-    RestTemplate restTemplate=new RestTemplate();
+    RestTemplate restTemplate = new RestTemplate();
 
 
-    public static final String TOKEN="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJncmFudCI6IlBBU1NXT1JEIiwiaXNzIjoiaHR0cDovL2FwaS5ibWkuaXIvc2VjdXJpdHkiLCJhdWQiOiJrZXkiLCJleHAiOjE2NTI1NTYyMTQ0NzIsIm5iZiI6MTY1MjQ2OTgxNDQ3Miwicm9sZSI6ImludGVybmV0IGJhbmstY3VzdG9tZXIiLCJzZXJpYWwiOiJmMWQyNGRkYS05NThhLTMzZjAtYTcxZC0yOGMxYjFiMTc1MTAiLCJzc24iOiIzOTIwMTgzNTg0IiwiY2xpZW50X2lkIjoiMTIzIiwic2NvcGVzIjpbImFjY291bnQtc3VwZXIiLCJ0cmFuc2FjdGlvbiIsInNzby1tYW5hZ2VyLWN1c3RvbWVyIiwic3NvLW1hbmFnZXItZW5yb2xsbWVudCIsImN1c3RvbWVyLXN1cGVyIl19.iqBrXrhe92z47FLl3KB6DFV6cx7TbZSSjxKBNYIufa4";
+    public static final String TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJncmFudCI6IlBBU1NXT1JEIiwiaXNzIjoiaHR0cDovL2FwaS5ibWkuaXIvc2VjdXJpdHkiLCJhdWQiOiJrZXkiLCJleHAiOjE2NTI2OTE2MzYzMDQsIm5iZiI6MTY1MjYwNTIzNjMwNCwicm9sZSI6ImludGVybmV0IGJhbmstY3VzdG9tZXIiLCJzZXJpYWwiOiI1MGUxN2M1OC1mNmYxLTM5MTAtOTdhNC04MWY3MzFjZDA2OGEiLCJzc24iOiIzOTIwMTgzNTg0IiwiY2xpZW50X2lkIjoiMTIzIiwic2NvcGVzIjpbImFjY291bnQtc3VwZXIiLCJ0cmFuc2FjdGlvbiIsInNzby1tYW5hZ2VyLWN1c3RvbWVyIiwic3NvLW1hbmFnZXItZW5yb2xsbWVudCIsImN1c3RvbWVyLXN1cGVyIl19.WuM_2pCfrKLfUVUmQIGQxmtuFxgSJ7uUosczIpoh35Q";
 
 
     @Override
@@ -40,32 +40,26 @@ public class SampleCronJob extends QuartzJobBean {
         if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.INITIATE.getValue())) {
             log.info("send a instruction request to standing-order service");
             Date date = new Date();
-            SchedulerCommand schedulerCommand = new SchedulerCommand(date,CommandEnumeration.INITIATE.getValue(),null, RecurringTransactionStatusEnum.PENDING.value());
-            apiCall(schedulerCommand,"http://localhost:9027/standing-order/runningScheduler/payment/initiate");
-        } else {
-            IntStream.range(0, 10).forEach(i -> {
-                log.info("Counting - {}", i);
-                try {
-                    Thread.sleep(1000);
-                }  catch (InterruptedException e) {
-                    log.error(e.getMessage(), e);
-                }
-            });
+            SchedulerCommand schedulerCommand = new SchedulerCommand(date, CommandEnumeration.INITIATE.getValue(), null, RecurringTransactionStatusEnum.PENDING.value());
+            apiCall(schedulerCommand, "http://localhost:9027/standing-order/runningScheduler/payment/initiate");
         }
         if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.EXECUTE.getValue())) {
             log.info("send a execute request to standing-order service");
             Date date = new Date();
-            SchedulerCommand schedulerCommand = new SchedulerCommand(date,CommandEnumeration.EXECUTE.getValue(),null, RecurringTransactionStatusEnum.PROCESSING.value());
-            apiCall(schedulerCommand,"http://localhost:9027/standing-order/runningScheduler/payment/execution");
-        } else {
-            IntStream.range(0, 10).forEach(i -> {
-                log.info("Counting - {}", i);
-                try {
-                    Thread.sleep(1000);
-                }  catch (InterruptedException e) {
-                    log.error(e.getMessage(), e);
-                }
-            });
+            SchedulerCommand schedulerCommand = new SchedulerCommand(date, CommandEnumeration.EXECUTE.getValue(), null, RecurringTransactionStatusEnum.PROCESSING.value());
+            apiCall(schedulerCommand, "http://localhost:9027/standing-order/runningScheduler/payment/execution");
+        }
+        if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.RESCHEDULE_FOR_FAILED_INSTRUCTIONS.getValue())) {
+            log.info("send a instruction request for initiation_failed to standing-order service");
+            Date date = new Date();
+            SchedulerCommand schedulerCommand = new SchedulerCommand(date, CommandEnumeration.INITIATE.getValue(), null, RecurringTransactionStatusEnum.INITIATION_FAILED.value());
+            apiCall(schedulerCommand, "http://localhost:9027/standing-order/runningScheduler/payment/initiate");
+        }
+        if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.RESCHEDULE_FOR_FAILED_TRANSACTIONS.getValue())) {
+            log.info("send a execution request for execution_failed to standing-order service");
+            Date date = new Date();
+            SchedulerCommand schedulerCommand = new SchedulerCommand(date, CommandEnumeration.EXECUTE.getValue(), null, RecurringTransactionStatusEnum.FAILED.value());
+            apiCall(schedulerCommand, "http://localhost:9027/standing-order/runningScheduler/payment/execution");
         }
         log.info("SampleCronJob End................");
     }
@@ -77,15 +71,15 @@ public class SampleCronJob extends QuartzJobBean {
     private BmiOAuth2User extractMyoAuth() {
         return (BmiOAuth2User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
+
     private void apiCall(SchedulerCommand message, String url) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-
 //        headers.setBearerAuth(extractMyoAuth().getAttribute("ACCESS_TOKEN_VALUE").toString());
         headers.setBearerAuth(TOKEN);
         HttpEntity<SchedulerCommand> request = new HttpEntity<SchedulerCommand>(message, headers);
-        RestTemplate restTemplate=new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
     }
 }
