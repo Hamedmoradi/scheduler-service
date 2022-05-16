@@ -1,5 +1,6 @@
 package ir.baam.job;
 
+import java.time.Instant;
 import java.util.Date;
 
 import ir.baam.domain.SchedulerCommand;
@@ -38,26 +39,25 @@ public class SampleCronJob extends QuartzJobBean {
         log.info("SampleCronJob Start................");
         if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.INITIATE.getValue())) {
             log.info("send a instruction request to standing-order service");
-            Date date = new Date();
-            SchedulerCommand schedulerCommand = new SchedulerCommand(date, CommandEnumeration.INITIATE.getValue(), null, StandingOrderTransactionStatusEnum.PENDING.value());
+            SchedulerCommand schedulerCommand = new SchedulerCommand(Instant.now(), CommandEnumeration.INITIATE.getValue(), null, StandingOrderTransactionStatusEnum.PENDING.value());
             apiCall(schedulerCommand, "http://192.168.53.58:9027/standing-order/runningScheduler/payment/initiate");
         }
         if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.EXECUTE.getValue())) {
             log.info("send a execute request to standing-order service");
-            Date date = new Date();
-            SchedulerCommand schedulerCommand = new SchedulerCommand(date, CommandEnumeration.EXECUTE.getValue(), null, StandingOrderTransactionStatusEnum.PROCESSING.value());
+
+            SchedulerCommand schedulerCommand = new SchedulerCommand(Instant.now(), CommandEnumeration.EXECUTE.getValue(), null, StandingOrderTransactionStatusEnum.PROCESSING.value());
             apiCall(schedulerCommand, "http://192.168.53.58:9027/standing-order/runningScheduler/payment/execution");
         }
         if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.RESCHEDULE_FOR_FAILED_INSTRUCTIONS.getValue())) {
             log.info("send a instruction request for initiation_failed to standing-order service");
-            Date date = new Date();
-            SchedulerCommand schedulerCommand = new SchedulerCommand(date, CommandEnumeration.INITIATE.getValue(), null, StandingOrderTransactionStatusEnum.INITIATION_FAILED.value());
+
+            SchedulerCommand schedulerCommand = new SchedulerCommand(Instant.now(), CommandEnumeration.INITIATE.getValue(), null, StandingOrderTransactionStatusEnum.INITIATION_FAILED.value());
             apiCall(schedulerCommand, "http://192.168.53.58:9027/standing-order/runningScheduler/payment/initiate");
         }
         if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.RESCHEDULE_FOR_FAILED_TRANSACTIONS.getValue())) {
             log.info("send a execution request for execution_failed to standing-order service");
-            Date date = new Date();
-            SchedulerCommand schedulerCommand = new SchedulerCommand(date, CommandEnumeration.EXECUTE.getValue(), null, StandingOrderTransactionStatusEnum.FAILED.value());
+
+            SchedulerCommand schedulerCommand = new SchedulerCommand(Instant.now(), CommandEnumeration.EXECUTE.getValue(), null, StandingOrderTransactionStatusEnum.FAILED.value());
             apiCall(schedulerCommand, "http://192.168.53.58:9027/standing-order/runningScheduler/payment/execution");
         }
         log.info("SampleCronJob End................");
