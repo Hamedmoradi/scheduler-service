@@ -11,7 +11,8 @@ public enum StandingOrderTransactionStatusEnum {
     INITIATION_FAILED("initiation_failed"),
     FAILED("failed"),
     INITIATION_CONNECTION_FAILED("initiation_connection_failed"),
-    EXECUTION_CONNECTION_FAILED("execution_connection_failed");
+    EXECUTION_CONNECTION_FAILED("execution_connection_failed"),
+    SUCCEED("succeed");
 
     private String value;
 
