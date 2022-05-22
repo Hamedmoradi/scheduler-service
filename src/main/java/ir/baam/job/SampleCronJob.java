@@ -2,6 +2,7 @@ package ir.baam.job;
 
 import java.time.Instant;
 import java.util.Date;
+
 import io.netty.resolver.DefaultAddressResolverGroup;
 import ir.baam.domain.SchedulerCommand;
 import ir.baam.domain.SchedulerJobInfo;
@@ -34,9 +35,10 @@ public class SampleCronJob extends QuartzJobBean {
     private static Date startDate;
     private static String token;
 
-    private String scopes = "money-transfer svc-mgmt-agg-acc-part-perc-info payment-order-joint-account-transfer";
+    private String scopes = "transaction";
     private String grantType = "client_credentials";
-    private String authorization = "Basic am9pbnQtYWNjb3VudC1jbGllbnQ6ZEw2dkIyY0kxYlIyYkwyZkM1a0czaE04bUd2QjNlRDFmRDFmQjJnUDQ=";
+//  private String authorization = "Basic am9pbnQtYWNjb3VudC1jbGllbnQ6ZEw2dkIyY0kxYlIyYkwyZkM1a0czaE04bUd2QjNlRDFmRDFmQjJnUDQ=";
+    private String authorization = "Basic a2V5OnNlY3JldA==";
 
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
@@ -73,37 +75,38 @@ public class SampleCronJob extends QuartzJobBean {
     //TODO if connection has been lost raise exception and reschedule
 
 
-    private Mono<String> apiCall(SchedulerCommand schedulerCommand, String uri) {
-String ttt=getClientToken();
+    private String apiCall(SchedulerCommand schedulerCommand, String uri) {
+        String token = getClientToken();
         WebClient webClient = WebClient
                 .builder()
-                .baseUrl("http://localhost:9027/")
+                .baseUrl("http://192.168.53.58:9027/")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .clientConnector(new ReactorClientHttpConnector(HttpClient.create().resolver(DefaultAddressResolverGroup.INSTANCE))).build();
         return webClient
                 .post()
                 .uri(uri)
-                .header("Authorization", ttt)
+                .header(HttpHeaders.AUTHORIZATION, token)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .body(Mono.just(schedulerCommand), SchedulerCommand.class)
                 .retrieve()
-                .bodyToMono(String.class);
+                .bodyToMono(String.class).blockOptional().get();
 
     }
 
-
-    private Mono<SsoDto> apiCall2(String basicAuthentication, String scopes, String grantType) {
+    private Mono<SsoDto> getToken(String basicAuthentication, String scopes, String grantType) {
 
         WebClient webClient = WebClient
                 .builder()
-                .baseUrl("http://185.135.30.10:9443")
+                .baseUrl("http://192.168.53.58:9080")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .clientConnector(new ReactorClientHttpConnector(HttpClient.create().resolver(DefaultAddressResolverGroup.INSTANCE)))
                 .build();
         return webClient
                 .post()
                 .uri("/identity/oauth2/auth/token")
-                .header("Authorization", basicAuthentication)
+                .header(HttpHeaders.AUTHORIZATION, basicAuthentication)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .header("x-forwarded-for", "192.168.53.65")
                 .body(BodyInserters.fromFormData("scope", scopes)
                         .with("grant_type", grantType))
                 .retrieve()
@@ -129,7 +132,7 @@ String ttt=getClientToken();
 
     private SsoDto getSsoAuth() {
         try {
-            return apiCall2(authorization, scopes, grantType).blockOptional().get();
+            return getToken(authorization, scopes, grantType).blockOptional().get();
         } catch (Exception exp) {
             return new SsoDto();
         }
