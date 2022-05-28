@@ -13,9 +13,20 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>spring-boot-quartz</name>
 	<description>Spring Boot app to demonstrate the working of Quartz Scheduler</description>
+	<developers>
+		<developer>
+			<name>ha.moradi</name>
+			<email>hamedmoradi.mailsbox@gmail.com</email>
+			<url>https://github.com/hamedmoradi</url>
+		</developer>
+	</developers>
 	<properties>
 		<java.version>11</java.version>
 		<audit-log-version>1.0.0.RELEASE</audit-log-version>
+		<oracle-driver.version>21.3.0.0</oracle-driver.version>
+		<spring-cloud.version>2020.0.3</spring-cloud.version>
+		<bmi-identity.version>1.2.0</bmi-identity.version>
+		<hazelcast.version>3.11.4</hazelcast.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -25,6 +36,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-quartz</artifactId>
+<!--			<version>2.6.7</version>-->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -33,9 +45,26 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
+			<artifactId>gson</artifactId>
+			<groupId>com.google.code.gson</groupId>
+			<version>2.8.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>
+		</dependency>
+		<dependency>
+			<artifactId>spring-cloud-starter-loadbalancer</artifactId>
+			<groupId>org.springframework.cloud</groupId>
+		</dependency>
+		<dependency>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+			<groupId>org.springframework.cloud</groupId>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<version>${oracle-driver.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -43,20 +72,53 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
+			<groupId>ir.bmi.identity</groupId>
+			<artifactId>client-security-starter-v2</artifactId>
+			<version>${bmi-identity.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<groupId>org.springframework.cloud</groupId>
+				<scope>import</scope>
+				<type>pom</type>
+				<version>${spring-cloud.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<build>
+		<finalName>scheduler-service</finalName>
 		<plugins>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.1.4</version>
+				<configuration>
+					<to>
+						<image>repo.sadad.co.ir/repository/baam-docker-registry/scheduler-service</image>
+						<tags>
+							<tag>${project.version}</tag>
+							<tag>latest</tag>
+						</tags>
+					</to>
+					<container>
+						<ports>
+							<port>9026</port>
+							<port>9026</port>
+						</ports>
+					</container>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -71,4 +133,76 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.0.1</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>3.0.0</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	<scm>
+		<connection>scm:git:https://vcs.sadad.co.ir/scm/payment/bmi-api.git</connection>
+		<developerConnection>scm:git:https://vcs.sadad.co.ir/scm/payment/bmi-api.git
+		</developerConnection>
+		<url>https://vcs.sadad.co.ir/scm/payment/bmi-api.git</url>
+	</scm>
+	<distributionManagement>
+		<repository>
+			<id>groups-public</id>
+			<name>Nexus Releases</name>
+			<url>https://repo.sadad.co.ir/repository/baam-maven-releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>groups-public</id>
+			<name>Nexus Snapshot</name>
+			<url>https://repo.sadad.co.ir/repository/baam-maven-snapshots/</url>
+		</snapshotRepository>
+		<site>
+			<id>groups-public</id>
+			<name>Nexus Sites</name>
+			<url>https://repo.sadad.co.ir/repository/baam-maven-group/</url>
+		</site>
+	</distributionManagement>
 </project>

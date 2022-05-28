@@ -1,10 +1,9 @@
 package ir.baam.controller;
 
-import java.util.List;
 
 import ir.baam.service.SchedulerJobService;
 import org.quartz.SchedulerException;
-import org.quartz.SchedulerMetaData;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +23,7 @@ public class JobController {
 	private final SchedulerJobService scheduleJobService;
 
 	@RequestMapping(value = "/saveOrUpdate", method = { RequestMethod.GET, RequestMethod.POST })
-	public Object saveOrUpdate(SchedulerJobInfo job) {
+	public Object saveOrUpdate(@RequestBody SchedulerJobInfo job) {
 		log.info("params, job = {}", job);
 		Message message = Message.failure();
 		try {
@@ -48,7 +47,7 @@ public class JobController {
 	}
 
 	@RequestMapping(value = "/runJob", method = { RequestMethod.GET, RequestMethod.POST })
-	public Object runJob(SchedulerJobInfo job) {
+	public Object runJob(@RequestBody SchedulerJobInfo job) {
 		log.info("params, job = {}", job);
 		Message message = Message.failure();
 		try {
@@ -62,7 +61,7 @@ public class JobController {
 	}
 
 	@RequestMapping(value = "/pauseJob", method = { RequestMethod.GET, RequestMethod.POST })
-	public Object pauseJob(SchedulerJobInfo job) {
+	public Object pauseJob(@RequestBody SchedulerJobInfo job) {
 		log.info("params, job = {}", job);
 		Message message = Message.failure();
 		try {
@@ -76,7 +75,7 @@ public class JobController {
 	}
 
 	@RequestMapping(value = "/resumeJob", method = { RequestMethod.GET, RequestMethod.POST })
-	public Object resumeJob(SchedulerJobInfo job) {
+	public Object resumeJob(@RequestBody SchedulerJobInfo job) {
 		log.info("params, job = {}", job);
 		Message message = Message.failure();
 		try {
@@ -90,7 +89,7 @@ public class JobController {
 	}
 
 	@RequestMapping(value = "/deleteJob", method = { RequestMethod.GET, RequestMethod.POST })
-	public Object deleteJob(SchedulerJobInfo job) {
+	public Object deleteJob(@RequestBody SchedulerJobInfo job) {
 		log.info("params, job = {}", job);
 		Message message = Message.failure();
 		try {
