@@ -1,4 +1,4 @@
-package ir.baam.config;
+package ir.baam.configuration.scheduler;
 
 import org.quartz.spi.TriggerFiredBundle;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;

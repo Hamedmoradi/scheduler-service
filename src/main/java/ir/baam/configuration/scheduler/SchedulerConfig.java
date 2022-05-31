@@ -1,4 +1,4 @@
-package ir.baam.config;
+package ir.baam.configuration.scheduler;
 
 import java.util.Properties;
 

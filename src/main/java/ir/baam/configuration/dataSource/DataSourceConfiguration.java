@@ -1,4 +1,4 @@
-package ir.baam.config.dataSource;
+package ir.baam.configuration.dataSource;
 
 
 import oracle.jdbc.datasource.impl.OracleDataSource;
