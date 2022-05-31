@@ -58,7 +58,7 @@ public class SampleCronJob extends QuartzJobBean {
         if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.RESCHEDULE_FOR_FAILED_TRANSACTIONS.getValue())) {
             log.info("send a execution request for execution_failed to standing-order service");
 
-            SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(new Date().getTime(), CommandEnumeration.EXECUTE.getValue(), null, StandingOrderTransactionStatusEnum.EXECUTION_CONNECTION_FAILED.value());
+            SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(new Date().getTime(), CommandEnumeration.EXECUTE.getValue(), null, StandingOrderTransactionStatusEnum.EXECUTION_FAILED.value());
             standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(),schedulerCommand);
         }
         log.info("SampleCronJob End................");
