@@ -2,9 +2,11 @@ package ir.baam.controller;
 
 import ir.baam.domain.Message;
 import ir.baam.domain.SchedulerJobInfo;
+import ir.baam.repository.SchedulerRepository;
 import ir.baam.service.SchedulerJobService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,14 +19,18 @@ public class SchedulerController {
 
     private final SchedulerJobService scheduleJobService;
 
+    @Autowired
+    private SchedulerRepository schedulerRepository;
+
     @PostMapping(path = "/reschedule/instruction/failed",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object reschedulingForFailedInstructions(@RequestBody SchedulerJobInfo job) {
+    public Object reschedulingForFailedInstructions(@RequestBody SchedulerJobInfo req) {
         log.debug("analyst and reschedule for failed instructions again.");
         Message message = Message.failure();
         try {
-            scheduleJobService.startJobNow(job);
+            SchedulerJobInfo jobInfo = schedulerRepository.findByCommandAndServiceType(req.getCommand(), req.getServiceType());
+            scheduleJobService.startJobNow(jobInfo);
             message = Message.success();
             log.debug("scheduler is running and rescheduling for failed instructions again.");
         } catch (Exception e) {
@@ -36,11 +42,12 @@ public class SchedulerController {
     @PostMapping(path = "/reschedule/transaction/failed",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Object reschedulingForFailedTransactions(@RequestBody SchedulerJobInfo job) {
+    public Object reschedulingForFailedTransactions(@RequestBody SchedulerJobInfo req) {
         log.debug("analyst and reschedule for failed transactions again.");
         Message message = Message.failure();
         try {
-            scheduleJobService.startJobNow(job);
+            SchedulerJobInfo jobInfo = schedulerRepository.findByCommandAndServiceType(req.getCommand(), req.getServiceType());
+            scheduleJobService.startJobNow(jobInfo);
             message = Message.success();
             log.debug("scheduler is running and rescheduling for failed transactions again.");
         } catch (Exception e) {

@@ -10,4 +10,6 @@ public interface SchedulerRepository extends JpaRepository<SchedulerJobInfo, Lon
 
 	SchedulerJobInfo findByJobName(String jobName);
 
+	SchedulerJobInfo findByCommandAndServiceType(String command,String serviceType);
+
 }
