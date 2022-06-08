@@ -1,7 +1,6 @@
 package ir.baam.job;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
+
 import java.util.Date;
 
 import ir.baam.webClient.standingOrder.dto.SchedulerCommandDto;
@@ -25,11 +24,9 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SampleCronJob extends QuartzJobBean {
-    @Autowired
+
     private SchedulerRepository schedulerRepository;
-    @Autowired
     private StandingOrderClient standingOrderClient;
-    @Autowired
     private  SchedulerClientTokenManager schedulerClientTokenManager;
 
 

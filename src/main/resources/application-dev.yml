@@ -1,9 +1,8 @@
 server:
   port: 9026
 spring:
-  profiles: dev
   application:
-    name: Scheduler-service
+    name: scheduler-service
   zipkin:
     enabled: false
   sleuth:
@@ -38,26 +37,24 @@ management:
         include: prometheus,health,info,metric,env,httptrace,loggers
 
 logging:
-  level:
-    root: INFO
   file:
-    name: ./logs/standing-order.log
+    name: ./logs/scheduler-service.log
     path: ./logs
   logback:
     rollingpolicy:
       max-file-size: 20MB
-      file-name-pattern: .logs/payment-order-%d{yyyy-MM-dd}.%i.log
+      file-name-pattern: .logs/scheduler-service-%d{yyyy-MM-dd}.%i.log
 
-secretKeyLocation: /opt/configs
 bmi:
   oauth2:
     excluded-urls: /v3/api-docs/**,/swagger-ui/**:*,/h2/**:*,/swagger-ui.html:*,/webjars/**:*,/v2/**:*,/swagger-resources/**:*,/actuator/**:*,/actuator/prometheus/**:*,/trace/**:*,/enterprisebaamapi/h2/**:*,/enterprisebaamapi/swagger-ui.html:*,/enterprisebaamapi/webjars/**:*,/enterprisebaamapi/v2/**:*,/enterprisebaamapi/swagger-resources/**:*,/enterprisebaamapi/actuator/**:*,/enterprisebaamapi/actuator/prometheus/**:*,/enterprisebaamapi/trace/**:*
+secretKeyLocation: /opt/configs
 
 feign:
   client:
     eb-url: https://eb.bmi.ir
     baam-url: https://www.bmi.ir
-    standing-order-url: http://192.168.53.58:9027
+    standing-order-url: http://localhost:9027
     sso-url: http://192.168.53.58:9080
 
 sso:
