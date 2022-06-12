@@ -34,11 +34,15 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @Service
 public class SchedulerJobService {
-
+    @Autowired
     private Scheduler scheduler;
+    @Autowired
     private SchedulerFactoryBean schedulerFactoryBean;
+    @Autowired
     private SchedulerRepository schedulerRepository;
+    @Autowired
     private ApplicationContext context;
+    @Autowired
     private JobScheduleCreator scheduleCreator;
 
     public SchedulerMetaData getMetaData() throws SchedulerException {

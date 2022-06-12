@@ -3,6 +3,7 @@ package ir.baam.controller;
 
 import ir.baam.service.SchedulerJobService;
 import org.quartz.SchedulerException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api")
 public class JobController {
 
+	@Autowired
 	private final SchedulerJobService scheduleJobService;
 
 	@RequestMapping(value = "/saveOrUpdate", method = { RequestMethod.GET, RequestMethod.POST })

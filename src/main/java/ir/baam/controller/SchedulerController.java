@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Log4j2
 public class SchedulerController {
 
+    @Autowired
     private final SchedulerJobService scheduleJobService;
 
     @Autowired
