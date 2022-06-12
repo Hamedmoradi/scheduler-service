@@ -2,7 +2,7 @@ server:
   port: 9026
 spring:
   application:
-    name: scheduler-service
+    name: scheduler
   zipkin:
     enabled: false
   sleuth:
@@ -10,7 +10,7 @@ spring:
       configurer:
         enabled: true
 
-  scheduler-service-datasource:
+  scheduler-datasource:
     username: MT
     password: kjio0988
     jdbcUrl: jdbc:oracle:thin:@//172.30.41.22:1521/offpayapdb1
@@ -38,12 +38,12 @@ management:
 
 logging:
   file:
-    name: ./logs/scheduler-service.log
+    name: ./logs/scheduler.log
     path: ./logs
   logback:
     rollingpolicy:
       max-file-size: 20MB
-      file-name-pattern: .logs/scheduler-service-%d{yyyy-MM-dd}.%i.log
+      file-name-pattern: .logs/scheduler-%d{yyyy-MM-dd}.%i.log
 
 bmi:
   oauth2:

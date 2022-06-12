@@ -10,7 +10,7 @@
     </parent>
     <groupId>ir.baam</groupId>
     <artifactId>spring-boot-quartz</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
     <name>spring-boot-quartz</name>
     <description>Spring Boot app to demonstrate the working of Quartz Scheduler</description>
     <developers>
@@ -152,7 +152,7 @@
         </dependencies>
     </dependencyManagement>
     <build>
-        <finalName>scheduler-service</finalName>
+        <finalName>scheduler</finalName>
         <resources>
             <resource>
                 <directory>resources</directory>
@@ -173,7 +173,7 @@
                 <version>3.1.4</version>
                 <configuration>
                     <to>
-                        <image>repo.sadad.co.ir/repository/baam-docker-registry/scheduler-service</image>
+                        <image>repo.sadad.co.ir/repository/baam-docker-registry/scheduler</image>
                         <tags>
                             <tag>${project.version}</tag>
                             <tag>latest</tag>
