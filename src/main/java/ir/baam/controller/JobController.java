@@ -42,7 +42,7 @@ public class JobController {
 	}
 
 	@RequestMapping("/getAllJobs")
-	public Object getAllJobs() throws SchedulerException {
+	public Object getAllJobs()  {
 		return scheduleJobService.getAllJobList();
 	}
 

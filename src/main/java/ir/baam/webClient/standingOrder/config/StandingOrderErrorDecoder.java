@@ -13,6 +13,8 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.Charset;
+
 @Log4j2
 @Component
 public class StandingOrderErrorDecoder implements ErrorDecoder {
@@ -23,7 +25,7 @@ public class StandingOrderErrorDecoder implements ErrorDecoder {
     StandingOrderErrorDto errorResponse;
     try {
       Gson gson = new GsonBuilder().serializeNulls().create();
-      errorResponse = gson.fromJson(response.body().asReader(), StandingOrderErrorDto.class);
+      errorResponse = gson.fromJson(response.body().asReader(Charset.defaultCharset()), StandingOrderErrorDto.class);
     } catch (Exception exp) {
       throw new BusinessException(SchedulerBusinessError.ACCOUNT_NUMBER_STRUCTURE_IS_WRONG);
     }

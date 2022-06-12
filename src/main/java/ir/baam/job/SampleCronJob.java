@@ -29,30 +29,32 @@ public class SampleCronJob extends QuartzJobBean {
     private StandingOrderClient standingOrderClient;
     private  SchedulerClientTokenManager schedulerClientTokenManager;
 
+    private static final String RECURRING="RECURRING";
+
 
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
         String triggerName = context.getTrigger().getJobKey().getName();
         SchedulerJobInfo schedulerJobInfo = schedulerRepository.findByJobName(triggerName);
         log.info("SampleCronJob Start................");
-        if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.INITIATE.getValue())) {
+        if (schedulerJobInfo.getServiceType().equals(RECURRING) && schedulerJobInfo.getCommand().equals(CommandEnumeration.INITIATE.getValue())) {
             log.info("send a instruction request to standing-order service");
             SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(new Date().getTime(), CommandEnumeration.INITIATE.getValue(), null, StandingOrderTransactionStatusEnum.PENDING.value());
             standingOrderClient.initiateCommand(schedulerClientTokenManager.getClientToken(),schedulerCommand);
         }
-        if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.EXECUTE.getValue())) {
+        if (schedulerJobInfo.getServiceType().equals(RECURRING) && schedulerJobInfo.getCommand().equals(CommandEnumeration.EXECUTE.getValue())) {
             log.info("send a execute request to standing-order service");
 
             SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(new Date().getTime(), CommandEnumeration.EXECUTE.getValue(), null, StandingOrderTransactionStatusEnum.PROCESSING.value());
             standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(),schedulerCommand);
         }
-        if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.RESCHEDULE_FOR_FAILED_INSTRUCTIONS.getValue())) {
+        if (schedulerJobInfo.getServiceType().equals(RECURRING) && schedulerJobInfo.getCommand().equals(CommandEnumeration.RESCHEDULE_FOR_FAILED_INSTRUCTIONS.getValue())) {
             log.info("send a instruction request for initiation_failed to standing-order service");
 
             SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(new Date().getTime(), CommandEnumeration.INITIATE.getValue(), null, StandingOrderTransactionStatusEnum.INITIATION_FAILED.value());
             standingOrderClient.initiateCommand(schedulerClientTokenManager.getClientToken(),schedulerCommand);
         }
-        if (schedulerJobInfo.getServiceType().equals("RECURRING") && schedulerJobInfo.getCommand().equals(CommandEnumeration.RESCHEDULE_FOR_FAILED_TRANSACTIONS.getValue())) {
+        if (schedulerJobInfo.getServiceType().equals(RECURRING) && schedulerJobInfo.getCommand().equals(CommandEnumeration.RESCHEDULE_FOR_FAILED_TRANSACTIONS.getValue())) {
             log.info("send a execution request for execution_failed to standing-order service");
 
             SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(new Date().getTime(), CommandEnumeration.EXECUTE.getValue(), null, StandingOrderTransactionStatusEnum.EXECUTION_FAILED.value());

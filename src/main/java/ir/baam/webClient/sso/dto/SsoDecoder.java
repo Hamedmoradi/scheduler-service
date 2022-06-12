@@ -10,6 +10,7 @@ import org.springframework.cloud.openfeign.support.SpringDecoder;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 
 public class SsoDecoder extends SpringDecoder {
 
@@ -21,7 +22,6 @@ public class SsoDecoder extends SpringDecoder {
   public SsoDto decode(
       Response response, Type type) throws IOException, FeignException {
     Gson gson = new GsonBuilder().serializeNulls().create();
-    SsoDto ssoDto = gson.fromJson(response.body().asReader(), SsoDto.class);
-    return ssoDto;
+    return gson.fromJson(response.body().asReader(Charset.defaultCharset()), SsoDto.class);
   }
 }

@@ -7,6 +7,7 @@ import ir.baam.enumeration.JobStatusEnum;
 import ir.baam.job.SampleCronJob;
 import ir.baam.job.SimpleJob;
 import ir.baam.repository.SchedulerRepository;
+import lombok.extern.log4j.Log4j2;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
@@ -34,19 +35,10 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class SchedulerJobService {
 
-    @Autowired
     private Scheduler scheduler;
-
-    @Autowired
     private SchedulerFactoryBean schedulerFactoryBean;
-
-    @Autowired
     private SchedulerRepository schedulerRepository;
-
-    @Autowired
     private ApplicationContext context;
-
-    @Autowired
     private JobScheduleCreator scheduleCreator;
 
     public SchedulerMetaData getMetaData() throws SchedulerException {
@@ -136,12 +128,12 @@ public class SchedulerJobService {
     @SuppressWarnings("unchecked")
     private void scheduleNewJob(SchedulerJobInfo jobInfo) {
         try {
-            Scheduler scheduler = schedulerFactoryBean.getScheduler();
+            Scheduler schedulerFromFactoryBeanScheduler = schedulerFactoryBean.getScheduler();
 
             JobDetail jobDetail = JobBuilder
                     .newJob((Class<? extends QuartzJobBean>) Class.forName(jobInfo.getJobClass()))
                     .withIdentity(jobInfo.getJobName(), jobInfo.getJobGroup()).build();
-            if (!scheduler.checkExists(jobDetail.getKey())) {
+            if (!schedulerFromFactoryBeanScheduler.checkExists(jobDetail.getKey())) {
 
                 jobDetail = scheduleCreator.createJob(
                         (Class<? extends QuartzJobBean>) Class.forName(jobInfo.getJobClass()), false, context,
@@ -155,7 +147,7 @@ public class SchedulerJobService {
                     trigger = scheduleCreator.createSimpleTrigger(jobInfo.getJobName(), new Date(),
                             jobInfo.getRepeatTime(), SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
                 }
-                scheduler.scheduleJob(jobDetail, trigger);
+                schedulerFromFactoryBeanScheduler.scheduleJob(jobDetail, trigger);
                 jobInfo.setJobStatus(JobStatusEnum.SCHEDULED.getValue());
                 schedulerRepository.save(jobInfo);
                 log.info(">>>>> jobName = [" + jobInfo.getJobName() + "]" + " scheduled.");
