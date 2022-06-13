@@ -1,10 +1,8 @@
 package ir.baam.exeption;
 
 public enum SchedulerBusinessError {
-    INVALID_INSTRUCTION_TYPE("so.business.exception.logic.invalid.instruction.type", "20005SO", 400),
-    ACCOUNT_NUMBER_STRUCTURE_IS_WRONG("so.business.exception.logic.account.number.structure.is.wrong", "20006SO", 400),
-    ILLEGAL_BMI_ACCOUNT_NUMBER_EXCEPTION("so.business.exception.logic.illegal.bmi.account.number", "20007SO", 400),
-    STANDING_ORDER_NOT_FOUND("so.business.exception.logic.standing.order.not.found", "200035SO", 500);
+    STANDING_ORDER_NOT_FOUND("so.business.exception.logic.standing.order.not.found", "200035SO", 500),
+    INVALID_COMMAND("so.business.exception.logic.invalid.command", "200032SO", 500);
 
 
 

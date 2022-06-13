@@ -27,10 +27,10 @@ public class StandingOrderErrorDecoder implements ErrorDecoder {
       Gson gson = new GsonBuilder().serializeNulls().create();
       errorResponse = gson.fromJson(response.body().asReader(Charset.defaultCharset()), StandingOrderErrorDto.class);
     } catch (Exception exp) {
-      throw new BusinessException(SchedulerBusinessError.ACCOUNT_NUMBER_STRUCTURE_IS_WRONG);
+      throw new BusinessException(SchedulerBusinessError.INVALID_COMMAND);
     }
     if (errorResponse == null) {
-      throw new BusinessException(SchedulerBusinessError.ILLEGAL_BMI_ACCOUNT_NUMBER_EXCEPTION,
+      throw new BusinessException(SchedulerBusinessError.INVALID_COMMAND,
               Validation.listOfOne("Can't convert response correctly"));
     } else {
       throw new BusinessException(String.valueOf(errorResponse.getMessage()),
