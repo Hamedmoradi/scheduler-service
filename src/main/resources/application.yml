@@ -54,7 +54,7 @@ feign:
   client:
     eb-url: https://eb.bmi.ir
     baam-url: https://www.bmi.ir
-    standing-order-url: standing-order-service:9027
+    standing-order-url: standing-order:9027
     sso-url: http://192.168.53.58:9080
 
 sso:
