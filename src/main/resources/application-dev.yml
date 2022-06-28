@@ -52,11 +52,8 @@ secretKeyLocation: /opt/configs
 
 feign:
   client:
-    eb-url: https://eb.bmi.ir
-    baam-url: https://www.bmi.ir
+    sso-url: 192.168.53.58:9080
     standing-order-url: standing-order:9027
-    sso-url: http://192.168.53.58:9080
-
 sso:
   grant-type: client_credentials
   scopes: transaction
