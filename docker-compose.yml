@@ -6,6 +6,6 @@ services:
     restart: always
     ports:
       - "9026:9026"
-  - volumes:
-          - "/var/log/money-transfer/scheduler/:/var/log/scheduler/"
-          - "/opt/configs:/opt/configs"
+    volumes:
+      - "/var/log/money-transfer/scheduler/:/var/log/scheduler/"
+      - "/opt/configs:/opt/configs"
