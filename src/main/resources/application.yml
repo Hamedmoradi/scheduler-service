@@ -9,7 +9,7 @@ spring:
     async:
       configurer:
         enabled: true
-  standing-order-datasource:
+  scheduler-datasource:
     username: MT
     password: kjio0988
     jdbcUrl: jdbc:oracle:thin:@//172.30.41.22:1521/offpayapdb1
