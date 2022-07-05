@@ -9,7 +9,7 @@ RUN echo "Env variable :  $JAVA_OPTS"
 ENV TZ=Asia/Tehran
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-ARG JAR_FILE=target/scheduler-service.jar
+ARG JAR_FILE=target/scheduler.jar
 COPY ${JAR_FILE} /opt/app.jar
 COPY ./secret.key /opt/configs/secret.key
 WORKDIR /opt

@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: scheduler-service
+  name: scheduler
   labels:
-    app: scheduler-service
+    app: scheduler
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: scheduler-service
+      app: scheduler
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: scheduler-service
+        app: scheduler
     spec:
       containers:
-        - image:  repo.sadad.co.ir/repository/baam-docker-registry/scheduler-service:0.0.1-SNAPSHOT
-          name: scheduler-service
+        - image:  repo.sadad.co.ir/repository/baam-docker-registry/scheduler:0.0.1-SNAPSHOT
+          name: scheduler
           args: ['application.properties']
           ports:
             - containerPort: 9026

@@ -8,11 +8,16 @@ public enum StandingOrderTransactionStatusEnum {
     PENDING("pending"),
     PROCESSING("processing"),
     FINISH("finish"),
-    INITIATION_FAILED("initiation_failed"),
     FAILED("failed"),
+    INITIATION_FAILED("initiation_failed"),
+    EXECUTION_FAILED("execution_failed"),
     INITIATION_CONNECTION_FAILED("initiation_connection_failed"),
     EXECUTION_CONNECTION_FAILED("execution_connection_failed"),
-    SUCCEED("succeed");
+    TERMINATED("terminated"),
+    SUCCEED("succeed"),
+    INITIALIZED("initialized"),
+    ACTIVE("active"),
+    SUSPEND("suspend");
 
     private String value;
 

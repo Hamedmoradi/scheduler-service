@@ -1,4 +1,4 @@
-package ir.baam.util;
+package ir.baam.webClient.sso.dto;
 
 import lombok.Data;
 

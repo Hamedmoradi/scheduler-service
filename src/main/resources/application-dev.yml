@@ -9,6 +9,7 @@ spring:
     async:
       configurer:
         enabled: true
+
   scheduler-datasource:
     username: MT
     password: kjio0988
@@ -44,17 +45,19 @@ logging:
       max-file-size: 20MB
       file-name-pattern: .logs/scheduler-%d{yyyy-MM-dd}.%i.log
 
+bmi:
+  oauth2:
+    excluded-urls: /v3/api-docs/**,/swagger-ui/**:*,/h2/**:*,/swagger-ui.html:*,/webjars/**:*,/v2/**:*,/swagger-resources/**:*,/actuator/**:*,/actuator/prometheus/**:*,/trace/**:*,/enterprisebaamapi/h2/**:*,/enterprisebaamapi/swagger-ui.html:*,/enterprisebaamapi/webjars/**:*,/enterprisebaamapi/v2/**:*,/enterprisebaamapi/swagger-resources/**:*,/enterprisebaamapi/actuator/**:*,/enterprisebaamapi/actuator/prometheus/**:*,/enterprisebaamapi/trace/**:*
+secretKeyLocation: /opt/configs
+
 feign:
   client:
     sso-url: 192.168.53.58:9080
     standing-order-url: standing-order:9027
-
 sso:
   grant-type: client_credentials
   scopes: transaction
   authorization: Basic a2V5OnNlY3JldA==
-secretKeyLocation: /opt/configs
 
-bmi:
-  oauth2:
-    excluded-urls: /v3/api-docs/**,/swagger-ui/**:*,/h2/**:*,/swagger-ui.html:*,/webjars/**:*,/v2/**:*,/swagger-resources/**:*,/actuator/**:*,/actuator/prometheus/**:*,/trace/**:*,/enterprisebaamapi/h2/**:*,/enterprisebaamapi/swagger-ui.html:*,/enterprisebaamapi/webjars/**:*,/enterprisebaamapi/v2/**:*,/enterprisebaamapi/swagger-resources/**:*,/enterprisebaamapi/actuator/**:*,/enterprisebaamapi/actuator/prometheus/**:*,/enterprisebaamapi/trace/**:*
+
+
