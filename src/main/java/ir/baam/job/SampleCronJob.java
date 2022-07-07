@@ -3,9 +3,8 @@ package ir.baam.job;
 
 import java.util.Date;
 
-import feign.Response;
 import ir.baam.service.SchedulerJobService;
-import ir.baam.webClient.standingOrder.dto.SchedulerCommandDto;
+import ir.baam.dto.SchedulerCommandDto;
 import ir.baam.domain.SchedulerJobInfo;
 import ir.baam.enumeration.CommandEnumeration;
 import ir.baam.enumeration.StandingOrderTransactionStatusEnum;
