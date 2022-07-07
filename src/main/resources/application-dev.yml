@@ -52,8 +52,16 @@ secretKeyLocation: /opt/configs
 
 feign:
   client:
+    config:
+      feignName:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: full
+        errorDecoder: ir.baam.webClient.standingOrder.config.StandingOrderErrorDecoder
+        decode404: false
+        decoder: ir.baam.webClient.standingOrder.config.StandingOrderDecoder
     sso-url: 192.168.53.58:9080
-    standing-order-url: standing-order:9027
+    standing-order-url: localhost:9027
 sso:
   grant-type: client_credentials
   scopes: transaction

@@ -1,4 +1,4 @@
-package ir.baam.webClient.standingOrder.dto;
+package ir.baam.dto;
 
 
 import lombok.AllArgsConstructor;
@@ -12,8 +12,6 @@ import java.util.Date;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class SchedulerCommandDto {
-
-
     private Date date;
     private String command;
     private Long count;

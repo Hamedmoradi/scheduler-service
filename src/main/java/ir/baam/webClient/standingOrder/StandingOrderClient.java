@@ -1,6 +1,6 @@
 package ir.baam.webClient.standingOrder;
 
-import ir.baam.webClient.standingOrder.dto.SchedulerCommandDto;
+import ir.baam.dto.SchedulerCommandDto;
 
 import ir.baam.webClient.standingOrder.config.StandingOrderConfig;
 import org.springframework.cloud.openfeign.FeignClient;
