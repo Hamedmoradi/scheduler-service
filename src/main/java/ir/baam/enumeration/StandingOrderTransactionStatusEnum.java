@@ -4,20 +4,20 @@ import lombok.SneakyThrows;
 
 public enum StandingOrderTransactionStatusEnum {
 
-    START("start"),
-    PENDING("pending"),
-    PROCESSING("processing"),
-    FINISH("finish"),
-    FAILED("failed"),
-    INITIATION_FAILED("initiation_failed"),
-    EXECUTION_FAILED("execution_failed"),
-    INITIATION_CONNECTION_FAILED("initiation_connection_failed"),
-    EXECUTION_CONNECTION_FAILED("execution_connection_failed"),
-    TERMINATED("terminated"),
-    SUCCEED("succeed"),
-    INITIALIZED("initialized"),
-    ACTIVE("active"),
-    SUSPEND("suspend");
+    START("START"),
+    PENDING("PENDING"),
+    PROCESSING("PROCESSING"),
+    FINISH("FINISH"),
+    FAILED("FAILED"),
+    INITIATION_FAILED("INITIATION_FAILED"),
+    EXECUTION_FAILED("EXECUTION_FAILED"),
+    INITIATION_CONNECTION_FAILED("INITIATION_CONNECTION_FAILED"),
+    EXECUTION_CONNECTION_FAILED("EXECUTION_CONNECTION_FAILED"),
+    TERMINATED("TERMINATED"),
+    SUCCEED("SUCCEED"),
+    INITIATE("INITIATE"),
+    ACTIVE("ACTIVE"),
+    SUSPEND("SUSPEND");
 
     private String value;
 
@@ -32,8 +32,7 @@ public enum StandingOrderTransactionStatusEnum {
 
     @SneakyThrows
     public static StandingOrderTransactionStatusEnum from(final String value) {
-        for (StandingOrderTransactionStatusEnum anEnum
-                : StandingOrderTransactionStatusEnum.values()) {
+        for (StandingOrderTransactionStatusEnum anEnum : StandingOrderTransactionStatusEnum.values()) {
             if (anEnum.value.equals(value)) {
                 return anEnum;
             }

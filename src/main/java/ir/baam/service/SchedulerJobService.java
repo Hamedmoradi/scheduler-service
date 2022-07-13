@@ -4,10 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import ir.baam.enumeration.JobStatusEnum;
-import ir.baam.job.SampleCronJob;
+import ir.baam.job.StandingOrderCornJob;
 import ir.baam.job.SimpleJob;
 import ir.baam.repository.SchedulerRepository;
-import lombok.extern.log4j.Log4j2;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
@@ -110,7 +109,7 @@ public class SchedulerJobService {
     @SuppressWarnings("deprecation")
     public void saveOrUpdate(SchedulerJobInfo scheduleJob) throws Exception {
         if (scheduleJob.getCronExpression().length() > 0) {
-            scheduleJob.setJobClass(SampleCronJob.class.getName());
+            scheduleJob.setJobClass(StandingOrderCornJob.class.getName());
             scheduleJob.setCronJob(true);
         } else {
             scheduleJob.setJobClass(SimpleJob.class.getName());

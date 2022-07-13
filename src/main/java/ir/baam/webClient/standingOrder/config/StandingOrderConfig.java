@@ -12,9 +12,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 @Configuration
-@Log4j2
 public class StandingOrderConfig {
-
 
   @Bean("StandingOrderErrorDecoder")
   public ErrorDecoder errorDecoder() {
@@ -27,5 +25,4 @@ public class StandingOrderConfig {
     ObjectFactory<HttpMessageConverters> objectFactory = () -> new HttpMessageConverters(jacksonConverter);
     return new ResponseEntityDecoder(new StandingOrderDecoder(objectFactory));
   }
-
 }
