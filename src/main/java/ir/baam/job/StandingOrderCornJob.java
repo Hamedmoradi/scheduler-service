@@ -3,7 +3,7 @@ package ir.baam.job;
 
 import ir.baam.domain.SchedulerJobInfo;
 import ir.baam.dto.SchedulerCommandDto;
-import ir.baam.enumeration.CommandEnumeration;
+import ir.baam.enumeration.StandingOrderTransactionStatusEnum;
 import ir.baam.repository.SchedulerRepository;
 import ir.baam.util.SchedulerClientTokenManager;
 import ir.baam.webClient.standingOrder.StandingOrderClient;
@@ -33,44 +33,48 @@ public class StandingOrderCornJob extends QuartzJobBean {
     private SchedulerClientTokenManager schedulerClientTokenManager;
 
     private static final String RECURRING = "RECURRING";
-    private static final String INITIATE_COMMAND = "INITIATE";
-    private static final String EXECUTE_COMMAND = "EXECUTE";
-
+    private static final String INITIATE = "INITIATE";
+    private static final String EXECUTE = "EXECUTE";
+    private static final String INITIATION_FAILED = "INITIATION_FAILED";
+    private static final String EXECUTION_FAILED = "EXECUTION_FAILED";
 
     @SneakyThrows
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-        String triggerName = context.getTrigger().getJobKey().getName();
-        SchedulerJobInfo schedulerJobInfo = schedulerRepository.findByJobName(triggerName);
-//        StandingOrderJobs(schedulerJobInfo);
-//        StandingOrderJobs(schedulerJobInfo, INITIATE, "send a instruction request to standing-order service", PENDING, INITIATE_COMMAND);
-//        StandingOrderJobs(schedulerJobInfo, EXECUTE, "send a execute request to standing-order service", PROCESSING, EXECUTE_COMMAND);
-//        StandingOrderJobs(schedulerJobInfo, RESCHEDULE_FOR_FAILED_INSTRUCTIONS, "send a instruction request for initiation_failed to standing-order service", INITIATION_FAILED, INITIATE_COMMAND);
-//        StandingOrderJobs(schedulerJobInfo, RESCHEDULE_FOR_FAILED_TRANSACTIONS, "send a execution request for execution_failed to standing-order service", EXECUTION_FAILED, "executeCommand");
-        if (schedulerJobInfo.getServiceType().equals(RECURRING) && schedulerJobInfo.getCommand().equals(CommandEnumeration.valueOf(schedulerJobInfo.getCommand()).getValue())) {
-            if (schedulerJobInfo.getCommand() == INITIATE_COMMAND) {
-                log.info("send a instruction request to standing-order service");
-                SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(schedulerJobInfo.getCommand(), null, PENDING.value());
-                standingOrderClient.initiateCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
-            } else if (schedulerJobInfo.getCommand() == EXECUTE_COMMAND) {
-                log.info("send a execute request to standing-order service");
-                SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(schedulerJobInfo.getCommand(), null, PROCESSING.value());
-                standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
-            }
-        }
+        StandingOrderJobs(schedulerRepository.findByJobName(context.getTrigger().getJobKey().getName()));
     }
-//    @Synchronized
-//    private void StandingOrderJobs(SchedulerJobInfo schedulerJobInfo) {
-//        if (schedulerJobInfo.getServiceType().equals(RECURRING) && schedulerJobInfo.getCommand().equals(CommandEnumeration.valueOf(schedulerJobInfo.getCommand()).getValue())) {
-//            if (schedulerJobInfo.getCommand() == INITIATE_COMMAND) {
-//                log.info("send a instruction request to standing-order service");
-//                SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(new Date(), schedulerJobInfo.getCommand(), null, PENDING.value());
-//                standingOrderClient.initiateCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
-//            } else if (schedulerJobInfo.getCommand() == EXECUTE_COMMAND){
-//                log.info("send a execute request to standing-order service");
-//                SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(new Date(), schedulerJobInfo.getCommand(), null, PROCESSING.value());
-//                standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
-//            }
-//        }
-//    }
+
+    private void StandingOrderJobs(SchedulerJobInfo schedulerJobInfo) {
+        SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(schedulerJobInfo.getCommand(), null, getStatus(schedulerJobInfo));
+        if (schedulerJobInfo.getCommand().equals(INITIATE) || schedulerJobInfo.getCommand().equals(INITIATION_FAILED)) {
+            log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
+            standingOrderClient.initiateCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
+        }
+        if (schedulerJobInfo.getCommand().equals(EXECUTE) || schedulerJobInfo.getCommand().equals(EXECUTION_FAILED)) {
+            log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
+            standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
+        }
+//        log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
+        //TODO throw exception for invalid command
+    }
+
+    public String getStatus(SchedulerJobInfo schedulerJobInfo) {
+        String status = null;
+        switch (schedulerJobInfo.getCommand()) {
+            case INITIATE:
+                status = PENDING.value();
+                break;
+            case EXECUTE:
+                status = PROCESSING.value();
+                break;
+            case INITIATION_FAILED:
+                status = StandingOrderTransactionStatusEnum.INITIATION_FAILED.value();
+                break;
+            case EXECUTION_FAILED:
+                status = StandingOrderTransactionStatusEnum.EXECUTION_FAILED.value();
+                break;
+        }
+        return status;
+    }
+
 }
