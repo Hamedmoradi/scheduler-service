@@ -137,11 +137,7 @@ public class SchedulerJobService {
                     .newJob((Class<? extends QuartzJobBean>) Class.forName(jobInfo.getJobClass()))
                     .withIdentity(jobInfo.getJobName(), jobInfo.getJobGroup()).build();
             if (!schedulerFromFactoryBeanScheduler.checkExists(jobDetail.getKey())) {
-
-                jobDetail = scheduleCreator.createJob(
-                        (Class<? extends QuartzJobBean>) Class.forName(jobInfo.getJobClass()), false, context,
-                        jobInfo.getJobName(), jobInfo.getJobGroup());
-
+                jobDetail = scheduleCreator.createJob((Class<? extends QuartzJobBean>) Class.forName(jobInfo.getJobClass()), false, context, jobInfo.getJobName(), jobInfo.getJobGroup());
                 Trigger trigger;
                 if (jobInfo.getCronJob()) {
                     trigger = scheduleCreator.createCronTrigger(jobInfo.getJobName(), new Date(),

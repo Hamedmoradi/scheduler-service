@@ -12,7 +12,6 @@ import java.util.Date;
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class SchedulerCommandDto {
-    private Date date;
     private String command;
     private Long count;
     private String transactionStatus;
