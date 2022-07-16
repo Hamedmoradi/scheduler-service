@@ -1,15 +1,16 @@
 package ir.baam.webClient.standingOrder.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ir.baam.enumeration.StandingOrderTransactionStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
 
 @Data
-@NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
 public class StandingOrderTransactionResponse {
@@ -26,5 +27,5 @@ public class StandingOrderTransactionResponse {
     @JsonProperty("exceptionErrorCode")
     private String exceptionErrorCode;
     @JsonProperty("standingOrderTransactionStatus")
-    private String standingOrderTransactionStatus;
+    private StandingOrderTransactionStatusEnum standingOrderTransactionStatus;
 }
