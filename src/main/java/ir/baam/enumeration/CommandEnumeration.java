@@ -1,10 +1,10 @@
 package ir.baam.enumeration;
 
 public enum CommandEnumeration {
-    INITIATE("initiate"),
-    EXECUTE("execute"),
-    RESCHEDULE_FOR_FAILED_INSTRUCTIONS("reschedule_For_Failed_Instructions"),
-    RESCHEDULE_FOR_FAILED_TRANSACTIONS("reschedule_For_Failed_Transactions");
+    INITIATE("INITIATE"),
+    EXECUTE("EXECUTE"),
+    FAILED_INSTRUCTIONS("FAILED_INSTRUCTIONS"),
+    FAILED_TRANSACTIONS("FAILED_TRANSACTIONS");
 
     private String value;
 
