@@ -9,7 +9,6 @@ spring:
     async:
       configurer:
         enabled: true
-
   scheduler-datasource:
     username: MT
     password: kjio0988

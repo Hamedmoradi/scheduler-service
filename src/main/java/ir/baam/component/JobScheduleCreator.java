@@ -28,7 +28,6 @@ public class JobScheduleCreator {
         factoryBean.setApplicationContext(context);
         factoryBean.setName(jobName);
         factoryBean.setGroup(jobGroup);
-
         // set job data map
         JobDataMap jobDataMap = new JobDataMap();
         jobDataMap.put(jobName + jobGroup, jobClass.getName());
