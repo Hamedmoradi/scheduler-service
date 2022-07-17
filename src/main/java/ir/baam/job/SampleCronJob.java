@@ -13,9 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import static ir.baam.enumeration.StandingOrderTransactionStatusEnum.PENDING;
@@ -43,7 +41,7 @@ public class SampleCronJob extends QuartzJobBean {
     private static final String EXECUTION_FAILED = "EXECUTION_FAILED";
 
     @Override
-    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+    protected void executeInternal(JobExecutionContext context) {
         SchedulerJobInfo schedulerJobInfo = schedulerRepository.findByJobName(context.getTrigger().getJobKey().getName());
         StandingOrderTransactionStatusEnum status = null;
         switch (schedulerJobInfo.getCommand()) {
