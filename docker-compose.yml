@@ -1,9 +1,13 @@
 version: '3'
 services:
   scheduler:
-    image:  repo.sadad.co.ir/repository/baam-docker-registry/scheduler:latest
+    image:  repo.sadad.co.ir/repository/baam-docker-registry/scheduler:BUILD_NUMBER
     container_name: scheduler
     restart: always
+    environment:
+      - "JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:6011"
+    extra_hosts:
+      - "scheduler-srv : 192.168.53.58"
     ports:
       - "9026:9026"
     volumes:
