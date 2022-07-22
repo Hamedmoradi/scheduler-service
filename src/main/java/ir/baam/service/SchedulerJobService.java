@@ -129,7 +129,7 @@ public class SchedulerJobService {
     }
 
     @SuppressWarnings("unchecked")
-    private void scheduleNewJob(SchedulerJobInfo jobInfo) {
+    public void scheduleNewJob(SchedulerJobInfo jobInfo) {
         try {
             Scheduler schedulerFromFactoryBeanScheduler = schedulerFactoryBean.getScheduler();
 
