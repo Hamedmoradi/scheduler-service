@@ -59,8 +59,4 @@ class SchedulerJobFactoryTest {
         when(factory.createJobInstance(triggerFiredBundle));
     }
 
-//    @Test
-//    @SneakyThrows
-//    public void testCreateJobInstance(){
-//    }
 }

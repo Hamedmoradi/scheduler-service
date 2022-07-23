@@ -10,7 +10,7 @@
     </parent>
     <groupId>ir.baam</groupId>
     <artifactId>spring-boot-quartz</artifactId>
-    <version>0.0.7-SNAPSHOT</version>
+    <version>0.0.8-SNAPSHOT</version>
     <name>spring-boot-quartz</name>
     <description>Spring Boot app to demonstrate the working of Quartz Scheduler</description>
     <developers>
