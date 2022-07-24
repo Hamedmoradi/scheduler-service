@@ -34,35 +34,4 @@ public class SchedulerJobInfo {
     private String nextFireTimeString;
     private Date nextFireTime;
     private String state;
-    private boolean isRunning;
-    private boolean isPaused;
-    private boolean isScheduled;
-
-
-    public void setState() {
-        String state = "";
-        if (isRunning()) {
-            state = "RUNNING";
-        } else if (isPaused()) {
-            state = "PAUSED";
-        } else if (isScheduled()) {
-            state = "SCHEDULED";
-        } else {
-            state = "UNKNOWN";
-        }
-        this.state = state;
-    }
-
-
-    public boolean isRunning() {
-        return isRunning;
-    }
-
-    public boolean isPaused() {
-        return isPaused;
-    }
-
-    public boolean isScheduled() {
-        return isScheduled;
-    }
 }
