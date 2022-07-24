@@ -3,8 +3,8 @@ package ir.baam.enumeration;
 public enum CommandEnumeration {
     INITIATE("INITIATE"),
     EXECUTE("EXECUTE"),
-    FAILED_INSTRUCTIONS("FAILED_INSTRUCTIONS"),
-    FAILED_TRANSACTIONS("FAILED_TRANSACTIONS");
+    INITIATION_FAILED("INITIATION_FAILED"),
+    EXECUTION_FAILED("EXECUTION_FAILED");
 
     private String value;
 

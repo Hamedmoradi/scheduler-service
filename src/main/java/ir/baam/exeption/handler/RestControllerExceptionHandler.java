@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import feign.FeignException;
 import ir.baam.exeption.BusinessException;
 import ir.baam.exeption.SchedulerBusinessError;
 import ir.baam.validation.Validation;
@@ -65,7 +66,7 @@ public class RestControllerExceptionHandler implements WebExceptionHandler {
     }
 
     @ResponseBody
-    @ExceptionHandler(IOException.class)
+    @ExceptionHandler({IOException.class, FeignException.class})
     public ResponseEntity<?> handleNonRunException(IOException be) {
         log.error(be.getMessage());
         ErrorDto errorDto = ErrorDto.builder()
