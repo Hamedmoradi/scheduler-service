@@ -27,11 +27,11 @@ public class StandingOrderErrorDecoder implements ErrorDecoder {
     } catch (Exception exp) {
       throw new BusinessException(SchedulerBusinessError.STANDING_ORDER_INTERNAL_ERROR);
     }
-    if (errorResponse == null) {
-      throw new BusinessException(SchedulerBusinessError.STANDING_ORDER_INTERNAL_ERROR);
-    } else {
-      throw new BusinessException(String.valueOf(errorResponse.getMessage()), response.status(), errorResponse.getCode(), errorResponse.getDetails());
-    }
-
+//    if (errorResponse == null) {
+//      throw new BusinessException(SchedulerBusinessError.STANDING_ORDER_INTERNAL_ERROR);
+//    } else {
+//      throw new BusinessException(String.valueOf(errorResponse.getMessage()), response.status(), errorResponse.getCode(), errorResponse.getDetails());
+//    }
+return null;
   }
 }

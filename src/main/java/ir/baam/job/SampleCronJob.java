@@ -42,31 +42,36 @@ public class SampleCronJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext context) {
-        SchedulerJobInfo schedulerJobInfo = schedulerRepository.findByJobName(context.getTrigger().getJobKey().getName());
-        StandingOrderTransactionStatusEnum status = null;
-        switch (schedulerJobInfo.getCommand()) {
-            case INITIATE:
-                status = PENDING;
-                break;
-            case EXECUTE:
-                status = PROCESSING;
-                break;
-            case INITIATION_FAILED:
-                status = StandingOrderTransactionStatusEnum.INITIATION_FAILED;
-                break;
-            case EXECUTION_FAILED:
-                status = StandingOrderTransactionStatusEnum.EXECUTION_FAILED;
-                break;
-        }
-        SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(schedulerJobInfo.getCommand(), null, status.value());
-        if (schedulerJobInfo.getCommand().equals(INITIATE) || schedulerJobInfo.getCommand().equals(INITIATION_FAILED)) {
+        try {
+            SchedulerJobInfo schedulerJobInfo = schedulerRepository.findByJobName(context.getTrigger().getJobKey().getName());
+            StandingOrderTransactionStatusEnum status = null;
+            switch (schedulerJobInfo.getCommand()) {
+                case INITIATE:
+                    status = PENDING;
+                    break;
+                case EXECUTE:
+                    status = PROCESSING;
+                    break;
+                case INITIATION_FAILED:
+                    status = StandingOrderTransactionStatusEnum.INITIATION_FAILED;
+                    break;
+                case EXECUTION_FAILED:
+                    status = StandingOrderTransactionStatusEnum.EXECUTION_FAILED;
+                    break;
+            }
+            SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(schedulerJobInfo.getCommand(), null, status.value());
+            if (schedulerJobInfo.getCommand().equals(INITIATE) || schedulerJobInfo.getCommand().equals(INITIATION_FAILED)) {
 //            log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
-            standingOrderClient.initiateCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
-        }
-        if (schedulerJobInfo.getCommand().equals(EXECUTE) || schedulerJobInfo.getCommand().equals(EXECUTION_FAILED)) {
+                standingOrderClient.initiateCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
+            }
+            if (schedulerJobInfo.getCommand().equals(EXECUTE) || schedulerJobInfo.getCommand().equals(EXECUTION_FAILED)) {
 //            log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
-            standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
-        }
+                standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
+            }
 //        log.info("SampleCronJob End................");
-    }
+        }catch (Exception e){
+
+        }
+        }
+
 }
