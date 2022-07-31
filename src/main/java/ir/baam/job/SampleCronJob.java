@@ -44,22 +44,22 @@ public class SampleCronJob extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext context) {
         try {
             SchedulerJobInfo schedulerJobInfo = schedulerRepository.findByJobName(context.getTrigger().getJobKey().getName());
-            StandingOrderTransactionStatusEnum status = null;
+            String status = null;
             switch (schedulerJobInfo.getCommand()) {
                 case INITIATE:
-                    status = PENDING;
+                    status = PENDING.getValue();
                     break;
                 case EXECUTE:
-                    status = PROCESSING;
+                    status = PROCESSING.getValue();
                     break;
                 case INITIATION_FAILED:
-                    status = StandingOrderTransactionStatusEnum.INITIATION_FAILED;
+                    status = StandingOrderTransactionStatusEnum.INITIATION_FAILED.getValue();
                     break;
                 case EXECUTION_FAILED:
-                    status = StandingOrderTransactionStatusEnum.EXECUTION_FAILED;
+                    status = StandingOrderTransactionStatusEnum.EXECUTION_FAILED.getValue();
                     break;
             }
-            SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(schedulerJobInfo.getCommand(), null, status.value());
+            SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(schedulerJobInfo.getCommand(), null, status);
             if (schedulerJobInfo.getCommand().equals(INITIATE) || schedulerJobInfo.getCommand().equals(INITIATION_FAILED)) {
                 log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
                 standingOrderClient.initiateCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
@@ -70,6 +70,7 @@ public class SampleCronJob extends QuartzJobBean {
             }
             log.info("SampleCronJob End................");
         } catch (Exception e) {
+            e.fillInStackTrace().getLocalizedMessage();
             e.printStackTrace();
         }
     }
