@@ -61,17 +61,17 @@ public class SampleCronJob extends QuartzJobBean {
             }
             SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(schedulerJobInfo.getCommand(), null, status);
             if (schedulerJobInfo.getCommand().equals(INITIATE) || schedulerJobInfo.getCommand().equals(INITIATION_FAILED)) {
-                log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
+//                log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
                 standingOrderClient.initiateCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
             }
             if (schedulerJobInfo.getCommand().equals(EXECUTE) || schedulerJobInfo.getCommand().equals(EXECUTION_FAILED)) {
-                log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
+//                log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
                 standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
             }
-            log.info("SampleCronJob End................");
+//            log.info("SampleCronJob End................");
         } catch (Exception e) {
-            e.fillInStackTrace().getLocalizedMessage();
-            e.printStackTrace();
+//            e.fillInStackTrace().getLocalizedMessage();
+//            e.printStackTrace();
         }
     }
 
