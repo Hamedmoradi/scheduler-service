@@ -5,6 +5,7 @@ import ir.baam.domain.SchedulerJobInfo;
 import ir.baam.dto.SchedulerCommandDto;
 import ir.baam.enumeration.StandingOrderTransactionStatusEnum;
 import ir.baam.repository.SchedulerRepository;
+import ir.baam.service.SchedulerJobService;
 import ir.baam.util.SchedulerClientTokenManager;
 import ir.baam.webClient.standingOrder.StandingOrderClient;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,8 @@ public class SampleCronJob extends QuartzJobBean {
     @Autowired
     private SchedulerClientTokenManager schedulerClientTokenManager;
 
+    @Autowired
+    private SchedulerJobService schedulerJobService;
 
     private static final String RECURRING = "RECURRING";
     private static final String INITIATE = "INITIATE";
@@ -39,6 +42,7 @@ public class SampleCronJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext context) {
+        try {
             SchedulerJobInfo schedulerJobInfo = schedulerRepository.findByJobName(context.getTrigger().getJobKey().getName());
             StandingOrderTransactionStatusEnum status = null;
             switch (schedulerJobInfo.getCommand()) {
@@ -57,11 +61,17 @@ public class SampleCronJob extends QuartzJobBean {
             }
             SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(schedulerJobInfo.getCommand(), null, status.value());
             if (schedulerJobInfo.getCommand().equals(INITIATE) || schedulerJobInfo.getCommand().equals(INITIATION_FAILED)) {
+                log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
                 standingOrderClient.initiateCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
             }
             if (schedulerJobInfo.getCommand().equals(EXECUTE) || schedulerJobInfo.getCommand().equals(EXECUTION_FAILED)) {
+                log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
                 standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
             }
+            log.info("SampleCronJob End................");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
 }
