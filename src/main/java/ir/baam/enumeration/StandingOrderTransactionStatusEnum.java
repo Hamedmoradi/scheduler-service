@@ -4,20 +4,20 @@ import lombok.SneakyThrows;
 
 public enum StandingOrderTransactionStatusEnum {
 
-    START("start"),
+    START("START"),
     PENDING("PENDING"),
     PROCESSING("PROCESSING"),
-    FINISH("finish"),
-    FAILED("failed"),
+    FINISH("FINISH"),
+    FAILED("FAILED"),
     INITIATION_FAILED("INITIATION_FAILED"),
     EXECUTION_FAILED("EXECUTION_FAILED"),
-    INITIATION_CONNECTION_FAILED("initiation_connection_failed"),
-    EXECUTION_CONNECTION_FAILED("execution_connection_failed"),
-    TERMINATED("terminated"),
-    SUCCEED("succeed"),
-    INITIALIZED("initialized"),
-    ACTIVE("active"),
-    SUSPEND("suspend");
+    INITIATION_CONNECTION_FAILED("INITIATION_CONNECTION_FAILED"),
+    EXECUTION_CONNECTION_FAILED("EXECUTION_CONNECTION_FAILED"),
+    TERMINATED("TERMINATED"),
+    SUCCEED("SUCCEED"),
+    INITIATE("INITIATE"),
+    ACTIVE("ACTIVE"),
+    SUSPEND("SUSPEND");
 
     private String value;
 
