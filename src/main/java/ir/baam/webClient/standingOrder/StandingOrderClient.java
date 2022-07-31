@@ -5,7 +5,6 @@ import ir.baam.dto.SchedulerCommandDto;
 import ir.baam.webClient.standingOrder.config.StandingOrderConfig;
 import ir.baam.webClient.standingOrder.dto.StandingOrderTransactionResponse;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
