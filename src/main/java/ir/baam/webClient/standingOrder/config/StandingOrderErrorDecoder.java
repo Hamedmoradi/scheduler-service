@@ -25,6 +25,7 @@ public class StandingOrderErrorDecoder implements ErrorDecoder {
             Gson gson = new GsonBuilder().serializeNulls().create();
             errorResponse = gson.fromJson(response.body().asReader(Charset.defaultCharset()), StandingOrderErrorDto.class);
         } catch (FeignException exp) {
+            exp.getStackTrace();
             throw new BusinessException(SchedulerBusinessError.STANDING_ORDER_INTERNAL_ERROR);
         }
         if (errorResponse == null) {
