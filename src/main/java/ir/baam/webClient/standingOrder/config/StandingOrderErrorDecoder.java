@@ -25,7 +25,7 @@ public class StandingOrderErrorDecoder implements ErrorDecoder {
             log.debug("Exception in: " + requestUrl + "--- status: " + responseStatus + " --- body: " + bodyStr);
             throw new BusinessException(String.valueOf(response.request()), response.status(), response.headers().toString());
         } catch (IOException e) {
-//            e.printStackTrace();
+            e.printStackTrace();
             throw new BusinessException(String.valueOf(response.request()), response.status(), response.headers().toString());
         }
     }

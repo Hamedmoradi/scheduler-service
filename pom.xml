@@ -258,7 +258,7 @@
                     <container>
                         <ports>
                             <port>9026</port>
-                            <port>9026</port>
+                            <port>5005</port>
                         </ports>
                     </container>
                 </configuration>
