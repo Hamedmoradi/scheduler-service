@@ -42,7 +42,6 @@ public class SampleCronJob extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext context) {
-        try {
             SchedulerJobInfo schedulerJobInfo = schedulerRepository.findByJobName(context.getTrigger().getJobKey().getName());
             String status = null;
             switch (schedulerJobInfo.getCommand()) {
@@ -69,10 +68,6 @@ public class SampleCronJob extends QuartzJobBean {
                 standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
             }
             log.info("SampleCronJob End................");
-        } catch (Exception e) {
-            e.fillInStackTrace().getLocalizedMessage();
-            e.printStackTrace();
-        }
     }
 
 }

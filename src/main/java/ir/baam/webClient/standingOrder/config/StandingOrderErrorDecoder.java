@@ -1,34 +1,58 @@
 package ir.baam.webClient.standingOrder.config;
 
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
-import feign.Util;
 import feign.codec.ErrorDecoder;
-import ir.baam.exeption.BusinessException;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.http.HttpStatus;
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 
 @Log4j2
 public class StandingOrderErrorDecoder implements ErrorDecoder {
 
     @SneakyThrows
     @Override
-    public BusinessException decode(String methodKey, Response response) {
-
+    public Exception decode(String methodKey, Response response) {
+        String errorMessage = null;
+        Reader reader = null;
         try {
-            String requestUrl = response.request().url();
-            HttpStatus responseStatus = HttpStatus.valueOf(response.status());
-            if (response.body()!=null){
-                String bodyStr = Util.toString(response.body().asReader(Util.UTF_8));
-                log.debug("Exception in: " + requestUrl + "--- status: " + responseStatus + " --- body: " + bodyStr);
-            }
-            throw new BusinessException(String.valueOf(response.request()), response.status(), response.headers().toString());
+            reader = response.body().asReader(StandardCharsets.UTF_8);
+            String result = IOUtils.toString(reader);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+            Exception exceptionMessage = mapper.readValue(result, Exception.class);
+            errorMessage = exceptionMessage.getMessage();
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new BusinessException(String.valueOf(response.request()), response.status(), response.headers().toString());
+            log.error("IO Exception on reading exception message feign client" + e);
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException e) {
+                log.error("IO Exception on reading exception message feign client" + e);
+            }
+        }
+        switch (response.status()) {
+            case 400:
+                log.error("Error in request went through feign client {} ", errorMessage);
+                return new Exception("Bad Request Through Feign");
+            case 401:
+                log.error("Error in request went through feign client {} ", errorMessage);
+                return new Exception("Unauthorized Request Through Feign");
+            case 404:
+                log.error("Error in request went through feign client {} ", errorMessage);
+                return new Exception("Unidentified Request Through Feign");
+            default:
+                log.error("Error in request went through feign client {} ", errorMessage);
+                //handle exception
+                return new Exception("Common Feign Exception");
         }
     }
 }
