@@ -18,11 +18,13 @@ public class StandingOrderErrorDecoder implements ErrorDecoder {
     @Override
     public BusinessException decode(String methodKey, Response response) {
 
-        String requestUrl = response.request().url();
-        HttpStatus responseStatus = HttpStatus.valueOf(response.status());
         try {
-            String bodyStr = Util.toString(response.body().asReader(Util.UTF_8));
-            log.debug("Exception in: " + requestUrl + "--- status: " + responseStatus + " --- body: " + bodyStr);
+            String requestUrl = response.request().url();
+            HttpStatus responseStatus = HttpStatus.valueOf(response.status());
+            if (response.body()!=null){
+                String bodyStr = Util.toString(response.body().asReader(Util.UTF_8));
+                log.debug("Exception in: " + requestUrl + "--- status: " + responseStatus + " --- body: " + bodyStr);
+            }
             throw new BusinessException(String.valueOf(response.request()), response.status(), response.headers().toString());
         } catch (IOException e) {
             e.printStackTrace();
