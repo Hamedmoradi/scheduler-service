@@ -5,7 +5,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.Date;
 
 
 
@@ -28,10 +27,8 @@ public class SchedulerJobInfo {
     private String description;
     private String interfaceName;
     private Long repeatTime;
-    private Boolean cronJob;
+    private boolean cronJob;
     private String serviceType;
     private String command;
-    private String nextFireTimeString;
-    private Date nextFireTime;
     private String state;
 }

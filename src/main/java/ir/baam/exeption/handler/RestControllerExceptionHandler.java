@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import feign.FeignException;
 import ir.baam.exeption.BusinessException;
-import ir.baam.exeption.SchedulerBusinessError;
+import ir.baam.enumeration.SchedulerBusinessError;
 import ir.baam.validation.Validation;
 import java.io.IOException;
 import java.net.ConnectException;

@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import ir.baam.enumeration.JobStatusEnum;
-import ir.baam.job.SampleCronJob;
+import ir.baam.job.StandingOrderJobs;
 import ir.baam.job.SimpleJob;
 import ir.baam.repository.SchedulerRepository;
 import org.quartz.JobBuilder;
@@ -56,7 +56,6 @@ public class SchedulerJobService {
         try {
             SchedulerJobInfo getJobInfo = schedulerRepository.findByJobName(jobInfo.getJobName());
             schedulerRepository.delete(getJobInfo);
-            log.info(">>>>> jobName = [" + jobInfo.getJobName() + "]" + " deleted.");
             return schedulerFactoryBean.getScheduler().deleteJob(new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup()));
         } catch (SchedulerException e) {
             log.error("Failed to delete job - {}", jobInfo.getJobName(), e);
@@ -70,7 +69,6 @@ public class SchedulerJobService {
             getJobInfo.setJobStatus(JobStatusEnum.PAUSED.getValue());
             schedulerRepository.save(getJobInfo);
             schedulerFactoryBean.getScheduler().pauseJob(new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup()));
-            log.info(">>>>> jobName = [" + jobInfo.getJobName() + "]" + " paused.");
             return true;
         } catch (SchedulerException e) {
             log.error("Failed to pause job - {}", jobInfo.getJobName(), e);
@@ -84,7 +82,6 @@ public class SchedulerJobService {
             getJobInfo.setJobStatus(JobStatusEnum.RESUMED.getValue());
             schedulerRepository.save(getJobInfo);
             schedulerFactoryBean.getScheduler().resumeJob(new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup()));
-            log.info(">>>>> jobName = [" + jobInfo.getJobName() + "]" + " resumed.");
             return true;
         } catch (SchedulerException e) {
             log.error("Failed to resume job - {}", jobInfo.getJobName(), e);
@@ -98,7 +95,6 @@ public class SchedulerJobService {
             getJobInfo.setJobStatus(JobStatusEnum.SCHEDULED_AND_STARTED.getValue());
             schedulerRepository.save(getJobInfo);
             schedulerFactoryBean.getScheduler().triggerJob(new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup()));
-            log.info(">>>>> jobName = [" + jobInfo.getJobName() + "]" + " scheduled and started now.");
             return true;
         } catch (SchedulerException e) {
             log.error("Failed to start new job - {}", jobInfo.getJobName(), e);
@@ -109,10 +105,10 @@ public class SchedulerJobService {
     @SuppressWarnings("deprecation")
     public void saveOrUpdate(SchedulerJobInfo scheduleJob) throws Exception {
         if (scheduleJob.getCronExpression().length() > 0) {
-            scheduleJob.setJobClass(SampleCronJob.class.getName());
+            scheduleJob.setJobClass(scheduleJob.getJobClass());
             scheduleJob.setCronJob(true);
         } else {
-            scheduleJob.setJobClass(SimpleJob.class.getName());
+            scheduleJob.setJobClass(scheduleJob.getJobClass());
             scheduleJob.setCronJob(false);
             scheduleJob.setRepeatTime((long) 1);
         }
@@ -122,10 +118,14 @@ public class SchedulerJobService {
         } else {
             updateScheduleJob(scheduleJob);
         }
-        scheduleJob.setDescription("i am job number " + scheduleJob.getId());
-        scheduleJob.setInterfaceName("interface_" + scheduleJob.getId());
+        if (scheduleJob.getDescription()==null){
+            scheduleJob.setDescription("i am job number " + scheduleJob.getId());
+        }
+        if (scheduleJob.getInterfaceName()==null){
+            scheduleJob.setInterfaceName("interface_" + scheduleJob.getId());
+
+        }
         scheduleJob.setServiceType(scheduleJob.getServiceType());
-        log.info(">>>>> jobName = [" + scheduleJob.getJobName() + "]" + " created.");
     }
 
     @SuppressWarnings("unchecked")
@@ -137,9 +137,10 @@ public class SchedulerJobService {
                     .newJob((Class<? extends QuartzJobBean>) Class.forName(jobInfo.getJobClass()))
                     .withIdentity(jobInfo.getJobName(), jobInfo.getJobGroup()).build();
             if (!schedulerFromFactoryBeanScheduler.checkExists(jobDetail.getKey())) {
-                jobDetail = scheduleCreator.createJob((Class<? extends QuartzJobBean>) Class.forName(jobInfo.getJobClass()), false, context, jobInfo.getJobName(), jobInfo.getJobGroup());
+                jobDetail = scheduleCreator.createJob((Class<? extends QuartzJobBean>) Class.forName(jobInfo.getJobClass()),
+                        false, context, jobInfo.getJobName(), jobInfo.getJobGroup());
                 Trigger trigger;
-                if (jobInfo.getCronJob()) {
+                if (jobInfo.isCronJob()) {
                     trigger = scheduleCreator.createCronTrigger(jobInfo.getJobName(), new Date(),
                             jobInfo.getCronExpression(), SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
                 } else {
@@ -162,7 +163,7 @@ public class SchedulerJobService {
 
     private void updateScheduleJob(SchedulerJobInfo jobInfo) {
         Trigger newTrigger;
-        if (jobInfo.getCronJob()) {
+        if (jobInfo.isCronJob()) {
             newTrigger = scheduleCreator.createCronTrigger(jobInfo.getJobName(), new Date(),
                     jobInfo.getCronExpression(), SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
         } else {

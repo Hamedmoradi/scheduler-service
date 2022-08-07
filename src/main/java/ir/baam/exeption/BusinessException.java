@@ -1,5 +1,6 @@
 package ir.baam.exeption;
 
+import ir.baam.enumeration.SchedulerBusinessError;
 import ir.baam.validation.Validation;
 import lombok.Data;
 

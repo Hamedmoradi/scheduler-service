@@ -41,16 +41,19 @@ public class StandingOrderErrorDecoder implements ErrorDecoder {
         }
         switch (response.status()) {
             case 400:
-                log.error("Error in request went through feign client {} ", errorMessage);
-                return new Exception("Bad Request Through Feign");
+                log.error( errorMessage);
+                return new Exception(errorMessage);
             case 401:
-                log.error("Error in request went through feign client {} ", errorMessage);
+                log.error( errorMessage);
                 return new Exception("Unauthorized Request Through Feign");
             case 404:
-                log.error("Error in request went through feign client {} ", errorMessage);
+                log.error( errorMessage);
                 return new Exception("Unidentified Request Through Feign");
+            case 500:
+                log.error(errorMessage);
+                return new Exception("Connection failed.");
             default:
-                log.error("Error in request went through feign client {} ", errorMessage);
+                log.error( errorMessage);
                 //handle exception
                 return new Exception("Common Feign Exception");
         }

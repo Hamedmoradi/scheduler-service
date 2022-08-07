@@ -1,4 +1,4 @@
-package ir.baam.exeption;
+package ir.baam.enumeration;
 
 public enum SchedulerBusinessError {
     STANDING_ORDER_NOT_FOUND("ss.business.exception.logic.standing.order.not.found", "300001SS", 400),
