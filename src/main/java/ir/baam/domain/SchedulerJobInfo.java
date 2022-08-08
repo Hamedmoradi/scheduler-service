@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
-
+import javax.validation.constraints.NotNull;
 
 
 @ToString
@@ -19,16 +19,21 @@ public class SchedulerJobInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, insertable = true, updatable = true)
     private Long id;
+    @NotNull
     private String jobName;
+    @NotNull
     private String jobGroup;
     private String jobStatus;
+    @NotNull
     private String jobClass;
+    @NotNull
     private String cronExpression;
     private String description;
     private String interfaceName;
     private Long repeatTime;
     private boolean cronJob;
+    @NotNull
     private String serviceType;
+    @NotNull
     private String command;
-    private String state;
 }

@@ -1,33 +1,22 @@
 package ir.baam.service;
 
-import java.util.Date;
-import java.util.List;
-
+import ir.baam.component.JobScheduleCreator;
+import ir.baam.domain.SchedulerJobInfo;
+import ir.baam.dto.SchedulerJobInfoDto;
 import ir.baam.enumeration.JobStatusEnum;
-import ir.baam.job.StandingOrderJobs;
-import ir.baam.job.SimpleJob;
 import ir.baam.repository.SchedulerRepository;
-import org.quartz.JobBuilder;
-import org.quartz.JobDetail;
-import org.quartz.JobKey;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.SchedulerMetaData;
-import org.quartz.SimpleTrigger;
-import org.quartz.Trigger;
-import org.quartz.TriggerKey;
+import lombok.extern.slf4j.Slf4j;
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import ir.baam.component.JobScheduleCreator;
-import ir.baam.domain.SchedulerJobInfo;
-
-import lombok.extern.slf4j.Slf4j;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Transactional
@@ -102,82 +91,121 @@ public class SchedulerJobService {
         }
     }
 
-    @SuppressWarnings("deprecation")
-    public void saveOrUpdate(SchedulerJobInfo scheduleJob) throws Exception {
-        if (scheduleJob.getCronExpression().length() > 0) {
-            scheduleJob.setJobClass(scheduleJob.getJobClass());
-            scheduleJob.setCronJob(true);
-        } else {
-            scheduleJob.setJobClass(scheduleJob.getJobClass());
-            scheduleJob.setCronJob(false);
-            scheduleJob.setRepeatTime((long) 1);
-        }
-        if (StringUtils.isEmpty(scheduleJob.getId())) {
-            log.info("Job Info: {}", scheduleJob);
-            scheduleNewJob(scheduleJob);
-        } else {
-            updateScheduleJob(scheduleJob);
-        }
-        if (scheduleJob.getDescription()==null){
-            scheduleJob.setDescription("i am job number " + scheduleJob.getId());
-        }
-        if (scheduleJob.getInterfaceName()==null){
-            scheduleJob.setInterfaceName("interface_" + scheduleJob.getId());
-
-        }
-        scheduleJob.setServiceType(scheduleJob.getServiceType());
-    }
-
     @SuppressWarnings("unchecked")
-    public void scheduleNewJob(SchedulerJobInfo jobInfo) {
+    public void saveScheduleNewJob(SchedulerJobInfoDto jobInfoDto) {
         try {
+            SchedulerJobInfo jobInfo = initJobScheduler(jobInfoDto);
             Scheduler schedulerFromFactoryBeanScheduler = schedulerFactoryBean.getScheduler();
-
-            JobDetail jobDetail = JobBuilder
-                    .newJob((Class<? extends QuartzJobBean>) Class.forName(jobInfo.getJobClass()))
-                    .withIdentity(jobInfo.getJobName(), jobInfo.getJobGroup()).build();
+            JobDetail jobDetail = createJobDetail(jobInfoDto);
             if (!schedulerFromFactoryBeanScheduler.checkExists(jobDetail.getKey())) {
-                jobDetail = scheduleCreator.createJob((Class<? extends QuartzJobBean>) Class.forName(jobInfo.getJobClass()),
-                        false, context, jobInfo.getJobName(), jobInfo.getJobGroup());
-                Trigger trigger;
-                if (jobInfo.isCronJob()) {
-                    trigger = scheduleCreator.createCronTrigger(jobInfo.getJobName(), new Date(),
-                            jobInfo.getCronExpression(), SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
-                } else {
-                    trigger = scheduleCreator.createSimpleTrigger(jobInfo.getJobName(), new Date(),
-                            jobInfo.getRepeatTime(), SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
-                }
-                schedulerFromFactoryBeanScheduler.scheduleJob(jobDetail, trigger);
-                jobInfo.setJobStatus(JobStatusEnum.SCHEDULED.getValue());
-                schedulerRepository.save(jobInfo);
-                log.info(">>>>> jobName = [" + jobInfo.getJobName() + "]" + " scheduled.");
+                createAndSaveJob(jobInfoDto, jobInfo, schedulerFromFactoryBeanScheduler);
             } else {
                 log.error("scheduleNewJobRequest.jobAlreadyExist");
             }
         } catch (ClassNotFoundException e) {
-            log.error("Class Not Found - {}", jobInfo.getJobClass(), e);
+            log.error("Class Not Found - {}", jobInfoDto.getJobClass(), e);
         } catch (SchedulerException e) {
             log.error(e.getMessage(), e);
         }
     }
 
-    private void updateScheduleJob(SchedulerJobInfo jobInfo) {
-        Trigger newTrigger;
-        if (jobInfo.isCronJob()) {
-            newTrigger = scheduleCreator.createCronTrigger(jobInfo.getJobName(), new Date(),
-                    jobInfo.getCronExpression(), SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+    private SchedulerJobInfo initJobScheduler(SchedulerJobInfoDto jobInfoDto) {
+        SchedulerJobInfo jobInfo = new SchedulerJobInfo();
+        IsCronJob(jobInfoDto, jobInfo);
+        jobInfo.setDescription(jobInfoDto.getDescription());
+        jobInfo.setInterfaceName(jobInfoDto.getInterfaceName());
+        jobInfo.setServiceType(jobInfoDto.getServiceType());
+        jobInfo.setJobName(jobInfoDto.getJobName());
+        jobInfo.setJobGroup(jobInfoDto.getJobGroup());
+        jobInfo.setCommand(jobInfoDto.getCommand());
+        return jobInfo;
+    }
+
+    private void createAndSaveJob(SchedulerJobInfoDto jobInfoDto, SchedulerJobInfo jobInfo, Scheduler schedulerFromFactoryBeanScheduler) throws ClassNotFoundException, SchedulerException {
+        JobDetail jobDetail;
+        jobDetail = createJobWithJobDetail(jobInfoDto);
+        Trigger trigger = createTriggerForJob(jobInfoDto.isCronJob(), jobInfoDto.getJobName(), jobInfoDto.getCronExpression(), jobInfoDto.getRepeatTime());
+        schedulerFromFactoryBeanScheduler.scheduleJob(jobDetail, trigger);
+        jobInfo.setJobStatus(JobStatusEnum.SCHEDULED.getValue());
+        schedulerRepository.save(jobInfo);
+        log.info(">>>>> jobName = [" + jobInfoDto.getJobName() + "]" + " scheduled.");
+    }
+
+    private JobDetail createJobWithJobDetail(SchedulerJobInfoDto jobInfoDto) throws ClassNotFoundException {
+        JobDetail jobDetail;
+        jobDetail = scheduleCreator.createJob((Class<? extends QuartzJobBean>) Class.forName(jobInfoDto.getJobClass()),
+                false, context, jobInfoDto.getJobName(), jobInfoDto.getJobGroup());
+        return jobDetail;
+    }
+
+    private JobDetail createJobDetail(SchedulerJobInfoDto jobInfoDto) throws ClassNotFoundException {
+        JobDetail jobDetail = JobBuilder
+                .newJob((Class<? extends QuartzJobBean>) Class.forName(jobInfoDto.getJobClass()))
+                .withIdentity(jobInfoDto.getJobName(), jobInfoDto.getJobGroup()).build();
+        return jobDetail;
+    }
+
+    private void IsCronJob(SchedulerJobInfoDto jobInfoDto, SchedulerJobInfo jobInfo) {
+        if (jobInfo.getCronExpression().length() > 0) {
+            jobInfo.setJobClass(jobInfoDto.getJobClass());
+            jobInfo.setCronJob(true);
         } else {
-            newTrigger = scheduleCreator.createSimpleTrigger(jobInfo.getJobName(), new Date(), jobInfo.getRepeatTime(),
-                    SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+            jobInfo.setJobClass(jobInfoDto.getJobClass());
+            jobInfo.setCronJob(false);
+            jobInfo.setRepeatTime((long) 1);
         }
+    }
+
+    private Trigger createTriggerForJob(boolean cronJob, String triggerName, String cronExpression, Long repeat) {
+        Trigger trigger;
+        if (cronJob) {
+            trigger = scheduleCreator.createCronTrigger(triggerName, new Date(),
+                    cronExpression, SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+        } else {
+            trigger = scheduleCreator.createSimpleTrigger(triggerName, new Date(),
+                    repeat, SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+        }
+        return trigger;
+    }
+
+    public void updateScheduleJob(SchedulerJobInfoDto schedulerJobInfoDto, Long id) {
+        Optional<SchedulerJobInfo> jobInfo = schedulerRepository.findById(id);
+        updateJobInfoFields(schedulerJobInfoDto, jobInfo);
+        Trigger newTrigger = createTriggerForJob(jobInfo.get().isCronJob(), jobInfo.get().getJobName(), jobInfo.get().getCronExpression(), jobInfo.get().getRepeatTime());
         try {
-            schedulerFactoryBean.getScheduler().rescheduleJob(TriggerKey.triggerKey(jobInfo.getJobName()), newTrigger);
-            jobInfo.setJobStatus(JobStatusEnum.EDITED_AND_SCHEDULED.getValue());
-            jobInfo.setServiceType(jobInfo.getServiceType());
-            schedulerRepository.save(jobInfo);
-            log.info(">>>>> jobName = [" + jobInfo.getJobName() + "]" + " updated and scheduled.");
+            schedulerFactoryBean.getScheduler().rescheduleJob(TriggerKey.triggerKey(jobInfo.get().getJobName()), newTrigger);
+            jobInfo.get().setJobStatus(JobStatusEnum.EDITED_AND_SCHEDULED.getValue());
+            schedulerRepository.save(jobInfo.get());
+            log.info(">>>>> jobName = [" + schedulerJobInfoDto.getJobName() + "]" + " updated and scheduled.");
         } catch (SchedulerException e) {
             log.error(e.getMessage(), e);
+        }
+    }
+
+    private void updateJobInfoFields(SchedulerJobInfoDto schedulerJobInfoDto, Optional<SchedulerJobInfo> jobInfo) {
+        if (schedulerJobInfoDto.getCommand() != null) {
+            jobInfo.get().setCommand(schedulerJobInfoDto.getCommand());
+        }
+        if (schedulerJobInfoDto.getCronExpression() != null) {
+            jobInfo.get().setJobName(schedulerJobInfoDto.getJobName());
+        }
+        if (schedulerJobInfoDto.getCronExpression() != null) {
+            jobInfo.get().setCronExpression(schedulerJobInfoDto.getCronExpression());
+        }
+        if (schedulerJobInfoDto.getDescription() != null) {
+            jobInfo.get().setDescription(schedulerJobInfoDto.getDescription());
+        }
+        if (schedulerJobInfoDto.getInterfaceName() != null) {
+            jobInfo.get().setInterfaceName(schedulerJobInfoDto.getInterfaceName());
+        }
+        if (schedulerJobInfoDto.getJobGroup() != null) {
+            jobInfo.get().setJobGroup(schedulerJobInfoDto.getJobGroup());
+        }
+        if (schedulerJobInfoDto.getRepeatTime() != null) {
+            jobInfo.get().setRepeatTime(schedulerJobInfoDto.getRepeatTime());
+        }
+        if (schedulerJobInfoDto.getServiceType() != null) {
+            jobInfo.get().setServiceType(schedulerJobInfoDto.getServiceType());
         }
     }
 }
