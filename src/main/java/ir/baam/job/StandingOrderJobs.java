@@ -39,7 +39,7 @@ public class StandingOrderJobs extends QuartzJobBean {
 
     @Override
     protected void executeInternal(JobExecutionContext context) {
-        SchedulerJobInfo schedulerJobInfo = schedulerRepository.findByCommandAndServiceType(context.getTrigger().getJobKey().getName(),RECURRING);
+        SchedulerJobInfo schedulerJobInfo = schedulerRepository.findByJobNameAndServiceType(context.getTrigger().getJobKey().getName(), RECURRING);
         String status = null;
         switch (schedulerJobInfo.getCommand()) {
             case INITIATE:
@@ -63,32 +63,28 @@ public class StandingOrderJobs extends QuartzJobBean {
             default:
                 break;
         }
+
         SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(schedulerJobInfo.getCommand(), null, status);
+
         if (schedulerJobInfo.getCommand().equals(INITIATE)) {
-            log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
             standingOrderClient.initiateCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
         }
         if (schedulerJobInfo.getCommand().equals(EXECUTE)) {
-            log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
             standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
         }
         if (schedulerJobInfo.getCommand().equals(INITIATION_FAILED)) {
-            log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
             standingOrderClient.initiateFailedCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
         }
         if (schedulerJobInfo.getCommand().equals(EXECUTION_FAILED)) {
-            log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
             standingOrderClient.executeFailedCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
         }
         if (schedulerJobInfo.getCommand().equals(COMPLETED_PERIOD)) {
-            log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
             standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
         }
         if (schedulerJobInfo.getCommand().equals(TERMINATE_PERIOD)) {
-            log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
             standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
         }
-        log.info("SampleCronJob End................");
+        log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
     }
 
 }

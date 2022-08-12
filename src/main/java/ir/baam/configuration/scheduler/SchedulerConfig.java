@@ -10,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 public class SchedulerConfig {
@@ -23,6 +24,9 @@ public class SchedulerConfig {
 	@Autowired
 	private QuartzProperties quartzProperties;
 
+	@Autowired
+	private PlatformTransactionManager transactionManager;
+
 	@Bean
 	public SchedulerFactoryBean schedulerFactoryBean() {
 
@@ -33,8 +37,9 @@ public class SchedulerConfig {
 		properties.putAll(quartzProperties.getProperties());
 
 		SchedulerFactoryBean factory = new SchedulerFactoryBean();
-		factory.setOverwriteExistingJobs(true);
 		factory.setDataSource(dataSource);
+		factory.setTransactionManager(transactionManager);
+		factory.setOverwriteExistingJobs(true);
 		factory.setQuartzProperties(properties);
 		factory.setJobFactory(jobFactory);
 		return factory;

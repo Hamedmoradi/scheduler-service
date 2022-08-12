@@ -6,8 +6,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import feign.FeignException;
+import ir.baam.ErrorResponse;
 import ir.baam.exeption.BusinessException;
 import ir.baam.enumeration.SchedulerBusinessError;
+import ir.baam.exeption.JobNotFoundException;
 import ir.baam.validation.Validation;
 import java.io.IOException;
 import java.net.ConnectException;
@@ -188,5 +190,21 @@ public class RestControllerExceptionHandler implements WebExceptionHandler {
 //                .details()
                 .build();
         return new ResponseEntity<>(errorDto, HttpStatus.valueOf(errorDto.getStatus()));
+    }
+
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<ErrorResponse> handleUnexpectedError(Throwable throwable){
+        log.error("Unexpected server error", throwable);
+        return produceErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                "Unexpected server error. Contact system administrator for details.");
+    }
+
+    @ExceptionHandler(JobNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUnexpectedError(JobNotFoundException ex){
+        return produceErrorResponse(HttpStatus.NOT_FOUND, "No such job");
+    }
+
+    private ResponseEntity<ErrorResponse> produceErrorResponse(HttpStatus status, String msg){
+        return ResponseEntity.status(status).body(new ErrorResponse(status, msg));
     }
 }

@@ -115,9 +115,11 @@ public class SchedulerJobService {
         jobInfo.setDescription(jobInfoDto.getDescription());
         jobInfo.setInterfaceName(jobInfoDto.getInterfaceName());
         jobInfo.setServiceType(jobInfoDto.getServiceType());
+        jobInfo.setCronExpression(jobInfoDto.getCronExpression());
         jobInfo.setJobName(jobInfoDto.getJobName());
         jobInfo.setJobGroup(jobInfoDto.getJobGroup());
         jobInfo.setCommand(jobInfoDto.getCommand());
+        jobInfo.setRepeatTime(jobInfoDto.getRepeatTime());
         return jobInfo;
     }
 
@@ -146,7 +148,7 @@ public class SchedulerJobService {
     }
 
     private void IsCronJob(SchedulerJobInfoDto jobInfoDto, SchedulerJobInfo jobInfo) {
-        if (jobInfo.getCronExpression().length() > 0) {
+        if (jobInfoDto.getCronExpression().length() > 0) {
             jobInfo.setJobClass(jobInfoDto.getJobClass());
             jobInfo.setCronJob(true);
         } else {
