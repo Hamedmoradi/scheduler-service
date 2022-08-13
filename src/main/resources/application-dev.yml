@@ -1,6 +1,14 @@
 server:
   port: 9026
 spring:
+  boot:
+    admin:
+      client:
+        username: admin
+        password: admin
+        url: http://localhost:8080
+        api-path: /instances
+        prefer-ip: true
   application:
     name: scheduler
   zipkin:
@@ -30,10 +38,26 @@ spring:
     locations: classpath:db/migration
 
 management:
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      slo:
+        http:
+          server:
+            requests: 1s,5s,30s
+    enable:
+      tomcat: false
+      process: false
+      system: false
+      jdbc: false
   endpoints:
     web:
       exposure:
         include: prometheus,health,info,metric,env,httptrace,loggers
+  health:
+  show-details: always
 
 logging:
   file:
@@ -46,7 +70,7 @@ logging:
 
 bmi:
   oauth2:
-    excluded-urls: /v3/api-docs/**,/swagger-ui/**:*,/h2/**:*,/swagger-ui.html:*,/webjars/**:*,/v2/**:*,/swagger-resources/**:*,/actuator/**:*,/actuator/prometheus/**:*,/trace/**:*,/enterprisebaamapi/h2/**:*,/enterprisebaamapi/swagger-ui.html:*,/enterprisebaamapi/webjars/**:*,/enterprisebaamapi/v2/**:*,/enterprisebaamapi/swagger-resources/**:*,/enterprisebaamapi/actuator/**:*,/enterprisebaamapi/actuator/prometheus/**:*,/enterprisebaamapi/trace/**:*
+    excluded-urls: /v3/api-docs/**,/swagger-ui/**:*,/h2/**:*,/swagger-ui.html:*,/webjars/**:*,/v2/**:*,/swagger-resources/**:*,/actuator/**:*,/actuator/prometheus/**:*,/trace/**:*,/enterprisebaamapi/h2/**:*,/enterprisebaamapi/swagger-ui.html:*,/enterprisebaamapi/webjars/**:*,/enterprisebaamapi/v2/**:*,/enterprisebaamapi/swagger-resources/**:*,/enterprisebaamapi/actuator/**:*,/enterprisebaamapi/actuator/prometheus/**:*,/enterprisebaamapi/trace/**:*,/applications/**
 secretKeyLocation: /opt/configs
 
 feign:
