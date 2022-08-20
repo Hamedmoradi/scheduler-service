@@ -3,7 +3,9 @@ package ir.baam.job;
 
 import ir.baam.domain.SchedulerJobInfo;
 import ir.baam.dto.SchedulerCommandDto;
+import ir.baam.enumeration.StandingOrderTransactionStatusEnum;
 import ir.baam.repository.SchedulerRepository;
+import ir.baam.service.SchedulerJobService;
 import ir.baam.util.SchedulerClientTokenManager;
 import ir.baam.webClient.standingOrder.StandingOrderClient;
 import lombok.AllArgsConstructor;
@@ -14,13 +16,13 @@ import org.quartz.JobExecutionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
-import static ir.baam.enumeration.StandingOrderTransactionStatusEnum.*;
+import static ir.baam.enumeration.StandingOrderTransactionStatusEnum.PENDING;
 
 @Slf4j
 @DisallowConcurrentExecution
 @NoArgsConstructor
 @AllArgsConstructor
-public class StandingOrderJobs extends QuartzJobBean {
+public class SampleCronJob extends QuartzJobBean {
     @Autowired
     private SchedulerRepository schedulerRepository;
     @Autowired
@@ -28,63 +30,43 @@ public class StandingOrderJobs extends QuartzJobBean {
     @Autowired
     private SchedulerClientTokenManager schedulerClientTokenManager;
 
+    @Autowired
+    private SchedulerJobService schedulerJobService;
 
     private static final String RECURRING = "RECURRING";
     private static final String INITIATE = "INITIATE";
     private static final String EXECUTE = "EXECUTE";
     private static final String INITIATION_FAILED = "INITIATION_FAILED";
     private static final String EXECUTION_FAILED = "EXECUTION_FAILED";
-    private static final String COMPLETED_PERIOD = "COMPLETED_PERIOD";
-    private static final String TERMINATE_PERIOD = "TERMINATE_PERIOD";
 
     @Override
     protected void executeInternal(JobExecutionContext context) {
-        SchedulerJobInfo schedulerJobInfo = schedulerRepository.findByJobNameAndServiceType(context.getTrigger().getJobKey().getName(), RECURRING);
+        SchedulerJobInfo schedulerJobInfo = schedulerRepository.findByJobName(context.getTrigger().getJobKey().getName());
         String status = null;
         switch (schedulerJobInfo.getCommand()) {
             case INITIATE:
-                status = REQUESTED.getValue();
-                break;
-            case EXECUTE:
                 status = PENDING.getValue();
                 break;
+            case EXECUTE:
+                status = "PROCESSING";
+                break;
             case INITIATION_FAILED:
-                status = PROPOSED.getValue();
+                status = "INITIATION_FAILED";
                 break;
             case EXECUTION_FAILED:
-                status = SUSPENDED.getValue();
-                break;
-            case COMPLETED_PERIOD:
-                status = FULL_FILLED.getValue();
-                break;
-            case TERMINATE_PERIOD:
-                status = TERMINATED.getValue();
-                break;
-            default:
+                status = "EXECUTION_FAILED";
                 break;
         }
-
         SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(schedulerJobInfo.getCommand(), null, status);
-
-        if (schedulerJobInfo.getCommand().equals(INITIATE)) {
+        if (schedulerJobInfo.getCommand().equals(INITIATE) || schedulerJobInfo.getCommand().equals(INITIATION_FAILED)) {
+            log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
             standingOrderClient.initiateCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
         }
-        if (schedulerJobInfo.getCommand().equals(EXECUTE)) {
+        if (schedulerJobInfo.getCommand().equals(EXECUTE) || schedulerJobInfo.getCommand().equals(EXECUTION_FAILED)) {
+            log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
             standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
         }
-        if (schedulerJobInfo.getCommand().equals(INITIATION_FAILED)) {
-            standingOrderClient.initiateFailedCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
-        }
-        if (schedulerJobInfo.getCommand().equals(EXECUTION_FAILED)) {
-            standingOrderClient.executeFailedCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
-        }
-        if (schedulerJobInfo.getCommand().equals(COMPLETED_PERIOD)) {
-            standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
-        }
-        if (schedulerJobInfo.getCommand().equals(TERMINATE_PERIOD)) {
-            standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
-        }
-        log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
+        log.info("SampleCronJob End................");
     }
 
 }
