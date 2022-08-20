@@ -3,7 +3,6 @@ package ir.baam.job;
 
 import ir.baam.domain.SchedulerJobInfo;
 import ir.baam.dto.SchedulerCommandDto;
-import ir.baam.enumeration.StandingOrderTransactionStatusEnum;
 import ir.baam.repository.SchedulerRepository;
 import ir.baam.service.SchedulerJobService;
 import ir.baam.util.SchedulerClientTokenManager;
@@ -22,7 +21,7 @@ import static ir.baam.enumeration.StandingOrderTransactionStatusEnum.PENDING;
 @DisallowConcurrentExecution
 @NoArgsConstructor
 @AllArgsConstructor
-public class SampleCronJob extends QuartzJobBean {
+public class StandingOrderJobs extends QuartzJobBean {
     @Autowired
     private SchedulerRepository schedulerRepository;
     @Autowired
