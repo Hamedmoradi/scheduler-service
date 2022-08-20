@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@FeignClient(value = "PaymentOrder", url = "${feign.client.standing-order-url}", configuration = {StandingOrderConfig.class})
+@FeignClient(value = "StandingOrder", url = "${feign.client.standing-order-url}", configuration = {StandingOrderConfig.class})
 public interface StandingOrderClient {
 
   @PostMapping(value = "/standing-order/runningScheduler/payment/initiate")
