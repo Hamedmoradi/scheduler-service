@@ -17,7 +17,7 @@ public enum StandingOrderTransactionStatusEnum {
     FAILED("FAILED"),
     SUSPENDED("SUSPENDED");
 
-    private String value;
+    private final String value;
 
 
     StandingOrderTransactionStatusEnum(String value) {

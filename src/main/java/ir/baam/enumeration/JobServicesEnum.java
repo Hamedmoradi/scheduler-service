@@ -5,7 +5,7 @@ public enum JobServicesEnum {
     BATCH("BATCH"),
     INDIRECT_BATCH("INDIRECT_BATCH");
 
-    private String value;
+    private final String value;
 
     JobServicesEnum(String value) {
         this.value = value;

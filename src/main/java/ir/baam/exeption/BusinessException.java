@@ -3,10 +3,12 @@ package ir.baam.exeption;
 import ir.baam.enumeration.SchedulerBusinessError;
 import ir.baam.validation.Validation;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class BusinessException extends RuntimeException {
   private  String code = "Without code";

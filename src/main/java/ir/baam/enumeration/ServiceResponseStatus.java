@@ -4,7 +4,7 @@ public enum ServiceResponseStatus {
     TIME_OUT("timeOut"),
     RUNTIME_EXCEPTION("runTimeException");
 
-    private String ResponseValue;
+    private final String ResponseValue;
 
     ServiceResponseStatus(String responseValue) {
         ResponseValue = responseValue;

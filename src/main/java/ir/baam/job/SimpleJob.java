@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SimpleJob extends QuartzJobBean {
     @Override
-    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+    protected void executeInternal(JobExecutionContext context) {
         log.info("SimpleJob Start................");
         IntStream.range(0, 5).forEach(i -> {
             log.info("Counting - {}", i);

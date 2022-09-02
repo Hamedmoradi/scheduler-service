@@ -11,9 +11,9 @@ public enum SchedulerBusinessError {
 
 
 
-    private String message;
-    private String errorCode;
-    private int status;
+    private final String message;
+    private final String errorCode;
+    private final int status;
 
     SchedulerBusinessError(String message, String errorCode, int status) {
         this.errorCode = errorCode;

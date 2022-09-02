@@ -17,7 +17,7 @@ public class SchedulerJobInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, insertable = true, updatable = true)
+    @Column(name = "id", nullable = false)
     private Long id;
     @NotNull
     private String jobName;

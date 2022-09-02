@@ -6,5 +6,5 @@ public enum TriggerStateEnum {
     PAUSED,
     COMPLETE,
     ERROR,
-    BLOCKED;
+    BLOCKED
 }

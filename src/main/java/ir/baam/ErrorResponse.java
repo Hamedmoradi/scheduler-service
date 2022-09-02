@@ -8,9 +8,9 @@ import java.time.ZonedDateTime;
 @Getter
 public class ErrorResponse {
 
-    private ZonedDateTime timestamp;
-    private int status;
-    private String message;
+    private final ZonedDateTime timestamp;
+    private final int status;
+    private final String message;
 
     public ErrorResponse(HttpStatus httpStatus, String msg){
         status = httpStatus.value();

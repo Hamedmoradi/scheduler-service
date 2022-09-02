@@ -9,7 +9,7 @@ public enum CommandEnumeration {
     INITIATION_FAILED("INITIATION_FAILED"),
     EXECUTION_FAILED("EXECUTION_FAILED");
 
-    private String value;
+    private final String value;
 
     CommandEnumeration(String value) {
         this.value = value;

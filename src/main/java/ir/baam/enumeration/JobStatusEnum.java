@@ -7,7 +7,7 @@ public enum JobStatusEnum {
     SCHEDULED_AND_STARTED("SCHEDULED & STARTED"),
     EDITED_AND_SCHEDULED("EDITED & SCHEDULED");
 
-    private String value;
+    private final String value;
 
     JobStatusEnum(String value) {
         this.value = value;

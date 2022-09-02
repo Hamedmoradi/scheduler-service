@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.DisallowConcurrentExecution;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
@@ -27,8 +26,7 @@ public class PolCronJob extends QuartzJobBean {
   private SchedulerClientTokenManager schedulerClientTokenManager;
 
   @Override
-  protected void executeInternal(JobExecutionContext context)
-      throws JobExecutionException {
+  protected void executeInternal(JobExecutionContext context) {
     SchedulerJobInfo schedulerJobInfo = schedulerRepository.findByJobName(context.getTrigger().getJobKey().getName());
     paymentOrderClient.polInquiry(schedulerClientTokenManager.getClientToken(), schedulerJobInfo.getCommand());
   }
