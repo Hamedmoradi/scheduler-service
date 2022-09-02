@@ -36,62 +36,6 @@
         <rest-assured.version>4.4.0</rest-assured.version>
         <spring-cloud.version>2020.0.3</spring-cloud.version>
     </properties>
-    <profiles>
-        <profile>
-            <id>dev</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <docker.image.prefix>baam</docker.image.prefix>
-                <active.spring.profile>dev</active.spring.profile>
-            </properties>
-            <build>
-                <resources>
-                    <resource>
-                        <filtering>true</filtering>
-                        <directory>${project.basedir}/src/main/resources</directory>
-                    </resource>
-                </resources>
-            </build>
-        </profile>
-        <profile>
-            <id>prod</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <docker.image.prefix>baam</docker.image.prefix>
-                <active.spring.profile>prod</active.spring.profile>
-            </properties>
-            <build>
-                <resources>
-                    <resource>
-                        <filtering>true</filtering>
-                        <directory>${project.basedir}/src/main/resources</directory>
-                    </resource>
-                </resources>
-            </build>
-        </profile>
-        <profile>
-            <id>uat</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <docker.image.prefix>baam</docker.image.prefix>
-                <active.spring.profile>uat</active.spring.profile>
-            </properties>
-            <build>
-                <resources>
-                    <resource>
-                        <filtering>true</filtering>
-                        <directory>${project.basedir}/src/main/resources</directory>
-                    </resource>
-                </resources>
-            </build>
-        </profile>
-    </profiles>
         <dependencies>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>

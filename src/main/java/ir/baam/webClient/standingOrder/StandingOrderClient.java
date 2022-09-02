@@ -13,23 +13,17 @@ import java.util.List;
 @FeignClient(value = "StandingOrder", url = "${feign.client.standing-order-url}", configuration = {StandingOrderConfig.class})
 public interface StandingOrderClient {
 
+  @PostMapping(value = "/runningScheduler/payment/prepare/transactions")
+  List<StandingOrderTransactionResponse> prepareStandingOrderForCacheRecords(@RequestHeader("Authorization") String token, @RequestBody SchedulerCommandDto schedulerCommand);
+
   @PostMapping(value = "/standing-order/runningScheduler/payment/initiate")
   List<StandingOrderTransactionResponse> initiateCommand(@RequestHeader("Authorization") String token, @RequestBody SchedulerCommandDto schedulerCommand);
-
-  @PostMapping(value = "/standing-order/runningScheduler/payment/initiate-failed")
-  List<StandingOrderTransactionResponse> initiateFailedCommand(@RequestHeader("Authorization") String token, @RequestBody SchedulerCommandDto schedulerCommand);
 
   @PostMapping(value = "/standing-order/runningScheduler/payment/execution")
   List<StandingOrderTransactionResponse> executeCommand(@RequestHeader("Authorization") String token, @RequestBody SchedulerCommandDto schedulerCommandDto);
 
-  @PostMapping(value = "/standing-order/runningScheduler/payment/execution-failed")
-  List<StandingOrderTransactionResponse> executeFailedCommand(@RequestHeader("Authorization") String token, @RequestBody SchedulerCommandDto schedulerCommandDto);
-
-  @PostMapping(value = "/standing-order/runningScheduler/payment/completed")
+  @PostMapping(value = "/runningScheduler/payment/determine/nextPeriod/status")
   List<StandingOrderTransactionResponse> completedCommand(@RequestHeader("Authorization") String token, @RequestBody SchedulerCommandDto schedulerCommandDto);
-
-  @PostMapping(value = "/standing-order/runningScheduler/payment/terminated")
-  List<StandingOrderTransactionResponse> terminatedCommand(@RequestHeader("Authorization") String token, @RequestBody SchedulerCommandDto schedulerCommandDto);
 
 
 }

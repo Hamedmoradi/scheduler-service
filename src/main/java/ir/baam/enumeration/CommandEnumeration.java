@@ -1,10 +1,11 @@
 package ir.baam.enumeration;
 
 public enum CommandEnumeration {
+    PREPARE_STANDING_ORDER_SERVICE("PREPARE_STANDING_ORDER_SERVICE"),
     INITIATE("INITIATE"),
     EXECUTE("EXECUTE"),
-    COMPLETED_PERIOD("COMPLETED_PERIOD"),
-    TERMINATE_PERIOD("TERMINATE_PERIOD"),
+    COMPLETED_IN_THIS_PERIOD("COMPLETED_IN_THIS_PERIOD"),
+    TERMINATE_IN_THIS_PERIOD("TERMINATE_IN_THIS_PERIOD"),
     INITIATION_FAILED("INITIATION_FAILED"),
     EXECUTION_FAILED("EXECUTION_FAILED");
 
@@ -18,7 +19,7 @@ public enum CommandEnumeration {
         return value;
     }
 
-    public CommandEnumeration getJobServices(String command){
+    public CommandEnumeration getJobServices(String command) {
         return CommandEnumeration.valueOf(command);
     }
 }
