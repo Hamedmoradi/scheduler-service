@@ -22,7 +22,7 @@ public interface StandingOrderClient {
   @PostMapping(value = "/standing-order/runningScheduler/payment/execution")
   List<StandingOrderTransactionResponse> executeCommand(@RequestHeader("Authorization") String token, @RequestBody SchedulerCommandDto schedulerCommandDto);
 
-  @PostMapping(value = "/runningScheduler/payment/determine/nextPeriod/status")
+  @PostMapping(value = "/standing-order/runningScheduler/payment/determine/nextPeriod/status")
   List<StandingOrderTransactionResponse> completedCommand(@RequestHeader("Authorization") String token, @RequestBody SchedulerCommandDto schedulerCommandDto);
 
 
