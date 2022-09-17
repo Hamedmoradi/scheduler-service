@@ -13,7 +13,7 @@ import java.util.List;
 @FeignClient(value = "StandingOrder", url = "${feign.client.standing-order-url}", configuration = {StandingOrderConfig.class})
 public interface StandingOrderClient {
 
-  @PostMapping(value = "/runningScheduler/payment/prepare/transactions")
+  @PostMapping(value = "/standing-order/runningScheduler/payment/prepare/transactions")
   List<StandingOrderTransactionResponse> prepareStandingOrderForCacheRecords(@RequestHeader("Authorization") String token, @RequestBody SchedulerCommandDto schedulerCommand);
 
   @PostMapping(value = "/standing-order/runningScheduler/payment/initiate")

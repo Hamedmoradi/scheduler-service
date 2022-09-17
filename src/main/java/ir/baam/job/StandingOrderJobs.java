@@ -39,7 +39,7 @@ public class StandingOrderJobs extends QuartzJobBean {
     @Override
     protected void executeInternal(JobExecutionContext context) {
         SchedulerJobInfo schedulerJobInfo =
-                schedulerRepository.findByCommandAndServiceType(context.getTrigger().getJobKey().getName(), RECURRING.getValue());
+                schedulerRepository.findByJobNameAndServiceType(context.getTrigger().getJobKey().getName(), RECURRING.getValue());
         String status = null;
         switch (schedulerJobInfo.getCommand()) {
             case PREPARE_STANDING_ORDER_SERVICE:
@@ -63,7 +63,7 @@ public class StandingOrderJobs extends QuartzJobBean {
             log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
             standingOrderClient.prepareStandingOrderForCacheRecords(schedulerClientTokenManager.getClientToken(), schedulerCommand);
             try {
-                context.getScheduler().rescheduleJob(context.getTrigger().getKey(), context.getTrigger());
+                context.getScheduler().rescheduleJob(context.getTrigger().getKey(), context.getTrigger());//TODO
             } catch (SchedulerException e) {
                 e.printStackTrace();
             }
