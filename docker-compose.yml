@@ -6,7 +6,7 @@ services:
     restart: always
     environment:
       - "JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:6011"
-      - "SPRING_APPLICATION-NAME=scheduler"
+      - "SPRING_APPLICATION_NAME=scheduler"
       - "SPRING_PROFILES_ACTIVE=dev"
       - "SPRING_CLOUD_CONFIG_URL=http://192.168.53.58:9031"
     extra_hosts:
