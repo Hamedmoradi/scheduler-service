@@ -10,7 +10,7 @@
     </parent>
     <groupId>ir.baam</groupId>
     <artifactId>spring-boot-quartz</artifactId>
-    <version>0.0.10-SNAPSHOT</version>
+    <version>0.0.11-SNAPSHOT</version>
     <name>spring-boot-quartz</name>
     <description>Spring Boot app to demonstrate the working of Quartz Scheduler</description>
     <developers>
@@ -22,7 +22,6 @@
     </developers>
     <properties>
         <java.version>11</java.version>
-        <audit-log-version>1.0.0.RELEASE</audit-log-version>
         <oracle-driver.version>21.3.0.0</oracle-driver.version>
         <spring-cloud.version>2020.0.3</spring-cloud.version>
         <bmi-identity.version>1.2.0</bmi-identity.version>
