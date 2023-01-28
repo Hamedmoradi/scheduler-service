@@ -22,7 +22,6 @@ import java.util.*;
 
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
 class SchedulerJobServiceTest {
 
     @Mock
@@ -40,7 +39,7 @@ class SchedulerJobServiceTest {
     @BeforeEach
     @SneakyThrows
     public void before() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(schedulerFactoryBean.getScheduler()).thenReturn(scheduler);
         mockJobIdentifier("job-name", "group");
     }
@@ -66,12 +65,6 @@ class SchedulerJobServiceTest {
         list.add(trigger);
     }
 
-    @Test
-    @SneakyThrows
-    void getMetaData() {
-        Scheduler scheduler = Mockito.mock(Scheduler.class);
-        Mockito.when(scheduler.getMetaData()).thenReturn(any());
-    }
 
     @Test
     void getAllJobList() throws SchedulerException {

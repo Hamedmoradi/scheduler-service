@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.quartz.SchedulerContext;
 import org.quartz.impl.JobDetailImpl;
 import org.quartz.spi.TriggerFiredBundle;
@@ -13,8 +14,7 @@ import org.springframework.context.ApplicationContext;
 
 import static org.mockito.Mockito.when;
 
-//TODO test dont pass
-@SpringBootTest
+
 class SchedulerJobFactoryTest {
 
     @Mock
@@ -34,6 +34,7 @@ class SchedulerJobFactoryTest {
     @BeforeEach
     @SneakyThrows
     public void setUp() {
+        MockitoAnnotations.openMocks(this);
         factory.setSchedulerContext(schedulerContext);
         factory.setApplicationContext(applicationContext);
     }
