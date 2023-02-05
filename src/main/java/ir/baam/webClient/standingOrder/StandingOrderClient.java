@@ -16,9 +16,6 @@ public interface StandingOrderClient {
   @PostMapping(value = "/standing-order/runningScheduler/payment/prepare/transactions")
   List<StandingOrderTransactionResponse> prepareStandingOrderForCacheRecords(@RequestHeader("Authorization") String token, @RequestBody SchedulerCommandDto schedulerCommand);
 
-  @PostMapping(value = "/standing-order/runningScheduler/payment/initiate")
-  List<StandingOrderTransactionResponse> initiateCommand(@RequestHeader("Authorization") String token, @RequestBody SchedulerCommandDto schedulerCommand);
-
   @PostMapping(value = "/standing-order/runningScheduler/payment/execution")
   List<StandingOrderTransactionResponse> executeCommand(@RequestHeader("Authorization") String token, @RequestBody SchedulerCommandDto schedulerCommandDto);
 
