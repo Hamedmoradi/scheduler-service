@@ -3,6 +3,7 @@ package ir.baam.enumeration;
 public enum JobServicesEnum {
     FUTURE("FUTURE"),
     RECURRING("RECURRING"),
+    SANTA("SATNA"),
     BATCH("BATCH"),
     INDIRECT_BATCH("INDIRECT_BATCH");
 
