@@ -162,7 +162,7 @@ public class SchedulerJobService {
         Trigger trigger;
         if (cronJob) {
             trigger = scheduleCreator.createCronTrigger(triggerName, new Date(),
-                    cronExpression, SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);
+                    cronExpression, CronTrigger.MISFIRE_INSTRUCTION_FIRE_ONCE_NOW);
         } else {
             trigger = scheduleCreator.createSimpleTrigger(triggerName, new Date(),
                     repeat, SimpleTrigger.MISFIRE_INSTRUCTION_FIRE_NOW);

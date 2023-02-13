@@ -64,7 +64,7 @@ public class SatnaTransactionsJob extends QuartzJobBean {
     }
     SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(schedulerJobInfo.getCommand(), null, status);
     if (schedulerJobInfo.getCommand().equals(PREPARE_SATNA)) {
-      log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
+      log.info("send a  request to satna service with " + schedulerJobInfo.getCommand() + " command.");
       standingOrderClient.prepareStandingOrderForCacheRecords(schedulerClientTokenManager.getClientToken(), schedulerCommand);
       try {
         context.getScheduler().rescheduleJob(context.getTrigger().getKey(), context.getTrigger());
@@ -73,11 +73,11 @@ public class SatnaTransactionsJob extends QuartzJobBean {
       }
     }
     if (schedulerJobInfo.getCommand().equals(EXECUTE) || schedulerJobInfo.getCommand().equals(EXECUTION_FAILED)) {
-      log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
+      log.info("send a  request to satna service with " + schedulerJobInfo.getCommand() + " command.");
       standingOrderClient.executeCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
     }
     if (schedulerJobInfo.getCommand().equals(COMPLETED_IN_THIS_PERIOD) || schedulerJobInfo.getCommand().equals(TERMINATE_IN_THIS_PERIOD)) {
-      log.info("send a  request to standing-order service with " + schedulerJobInfo.getCommand() + " command.");
+      log.info("send a  request to satna service with " + schedulerJobInfo.getCommand() + " command.");
       standingOrderClient.completedCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
     }
     log.info("SampleCronJob End................");
