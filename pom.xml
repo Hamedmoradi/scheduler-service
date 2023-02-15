@@ -203,20 +203,6 @@
         </dependencies>
     </dependencyManagement>
     <build>
-        <finalName>scheduler</finalName>
-        <resources>
-            <resource>
-                <directory>resources</directory>
-                <targetPath>${project.build.outputDirectory}</targetPath>
-                <includes>
-                    <include>application.yml</include>
-                    <include>application-dev.yml</include>
-                    <include>application-uat.yml</include>
-                    <include>application-test.yml</include>
-                    <include>application-prod.yml</include>
-                </includes>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>

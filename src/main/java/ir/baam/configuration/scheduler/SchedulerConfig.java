@@ -1,9 +1,8 @@
 package ir.baam.configuration.scheduler;
 
-import java.util.Properties;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.quartz.QuartzProperties;
 import org.springframework.context.ApplicationContext;
