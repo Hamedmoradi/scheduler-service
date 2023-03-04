@@ -63,9 +63,9 @@ public class SatnaTransactionsJob extends QuartzJobBean {
         break;
     }
     SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(schedulerJobInfo.getCommand(), null, status);
-    if (schedulerJobInfo.getCommand().equals(PREPARE_SATNA)) {
+    if (schedulerJobInfo.getCommand().equals(PREPARE_SATNA)) {//TODO
       log.info("send a  request to satna service with " + schedulerJobInfo.getCommand() + " command.");
-      standingOrderClient.prepareStandingOrderForCacheRecords(schedulerClientTokenManager.getClientToken(), schedulerCommand);
+      standingOrderClient.prepareSatnaTransaction(schedulerClientTokenManager.getClientToken(), schedulerCommand);
       try {
         context.getScheduler().rescheduleJob(context.getTrigger().getKey(), context.getTrigger());
       } catch (SchedulerException e) {
@@ -80,7 +80,7 @@ public class SatnaTransactionsJob extends QuartzJobBean {
       log.info("send a  request to satna service with " + schedulerJobInfo.getCommand() + " command.");
       standingOrderClient.completedCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
     }
-    log.info("SampleCronJob End................");
+    log.info("SatnaTransactionsJob End................");
   }
 
 }
