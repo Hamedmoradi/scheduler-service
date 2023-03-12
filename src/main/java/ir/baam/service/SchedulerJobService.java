@@ -43,9 +43,10 @@ public class SchedulerJobService {
 
     public boolean deleteJob(SchedulerJobInfo jobInfo) {
         try {
-            SchedulerJobInfo getJobInfo = schedulerRepository.findByJobName(jobInfo.getJobName());
-            schedulerRepository.delete(getJobInfo);
-            return schedulerFactoryBean.getScheduler().deleteJob(new JobKey(jobInfo.getJobName(), jobInfo.getJobGroup()));
+            SchedulerJobInfo schedulerJobInfo = schedulerRepository.findByJobName(jobInfo.getJobName());
+            scheduler.unscheduleJob(TriggerKey.triggerKey(schedulerJobInfo.getJobName()));
+            schedulerRepository.delete(schedulerJobInfo);
+            return schedulerFactoryBean.getScheduler().deleteJob(new JobKey(schedulerJobInfo.getJobName(), schedulerJobInfo.getJobGroup()));
         } catch (SchedulerException e) {
             log.error("Failed to delete job - {}", jobInfo.getJobName(), e);
             return false;

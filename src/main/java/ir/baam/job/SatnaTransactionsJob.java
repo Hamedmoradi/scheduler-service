@@ -62,15 +62,12 @@ public class SatnaTransactionsJob extends QuartzJobBean {
       default:
         break;
     }
+    //check option
+    //if  true
     SchedulerCommandDto schedulerCommand = new SchedulerCommandDto(schedulerJobInfo.getCommand(), null, status);
     if (schedulerJobInfo.getCommand().equals(PREPARE_SATNA)) {//TODO
       log.info("send a  request to satna service with " + schedulerJobInfo.getCommand() + " command.");
       standingOrderClient.prepareSatnaTransaction(schedulerClientTokenManager.getClientToken(), schedulerCommand);
-      try {
-        context.getScheduler().rescheduleJob(context.getTrigger().getKey(), context.getTrigger());
-      } catch (SchedulerException e) {
-        e.printStackTrace();
-      }
     }
     if (schedulerJobInfo.getCommand().equals(EXECUTE) || schedulerJobInfo.getCommand().equals(EXECUTION_FAILED)) {
       log.info("send a  request to satna service with " + schedulerJobInfo.getCommand() + " command.");
@@ -79,6 +76,12 @@ public class SatnaTransactionsJob extends QuartzJobBean {
     if (schedulerJobInfo.getCommand().equals(COMPLETED_IN_THIS_PERIOD) || schedulerJobInfo.getCommand().equals(TERMINATE_IN_THIS_PERIOD)) {
       log.info("send a  request to satna service with " + schedulerJobInfo.getCommand() + " command.");
       standingOrderClient.completedCommand(schedulerClientTokenManager.getClientToken(), schedulerCommand);
+    }
+    //else
+    try {
+      context.getScheduler().rescheduleJob(context.getTrigger().getKey(), context.getTrigger());
+    } catch (SchedulerException e) {
+      e.printStackTrace();
     }
     log.info("SatnaTransactionsJob End................");
   }
