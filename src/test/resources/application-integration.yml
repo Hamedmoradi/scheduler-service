@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test;INIT=create schema IF NOT EXISTS mydb;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        default-schema: mydb
+        dialect: org.hibernate.dialect.H2Dialect
+
+feign:
+  client:
+    eb-url: https://eb.bmi.ir
+    sso-url: 192.168.53.58:9080
+
+secretKeyLocation: /opt/configs/
+bmi:
+  oauth2:
+    excluded-urls: /api/agreements/audit,/v3/api-docs/**,/swagger-ui/**:*,/h2/**:*,/swagger-ui.html:*,/webjars/**:*,/v2/**:*,/swagger-resources/**:*,/actuator/**:*,/actuator/prometheus/**:*,/trace/**:*,/enterprisebaamapi/h2/**:*,/enterprisebaamapi/swagger-ui.html:*,/enterprisebaamapi/webjars/**:*,/enterprisebaamapi/v2/**:*,/enterprisebaamapi/swagger-resources/**:*,/enterprisebaamapi/actuator/**:*,/enterprisebaamapi/actuator/prometheus/**:*,/enterprisebaamapi/trace/**:*
+
+sso:
+  grant-type: client_credentials
+  scopes: joint-account-transfer money-transfer
+  authorization: Basic am9pbnQtYWNjb3VudC1jbGllbnQ6c2VjcmV0
