@@ -8,7 +8,7 @@
         <version>2.5.4</version>
         <relativePath/>
     </parent>
-    <groupId>ir.baam</groupId>
+    <groupId>scheduler.service</groupId>
     <artifactId>spring-boot-quartz</artifactId>
     <version>0.0.12-SNAPSHOT</version>
     <name>spring-boot-quartz</name>
@@ -22,11 +22,11 @@
     </developers>
     <properties>
         <java.version>11</java.version>
-        <oracle-driver.version>21.3.0.0</oracle-driver.version>
+        <oracle-driver.version>21.10.0.0</oracle-driver.version>
         <spring-cloud.version>2020.0.3</spring-cloud.version>
         <bmi-identity.version>1.2.0</bmi-identity.version>
         <hazelcast.version>3.11.4</hazelcast.version>
-        <testng.version>7.4.0</testng.version>
+        <testng.version>7.8.0</testng.version>
         <junit.jupiter.version>5.3.2</junit.jupiter.version>
         <junit.platform.version>1.8.1</junit.platform.version>
         <h2.version>1.4.200</h2.version>
@@ -99,7 +99,7 @@
         <dependency>
             <artifactId>gson</artifactId>
             <groupId>com.google.code.gson</groupId>
-            <version>2.8.8</version>
+            <version>2.10.1</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -122,11 +122,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>ir.bmi.identity</groupId>
-            <artifactId>client-security-starter-v2</artifactId>
-            <version>${bmi-identity.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -155,7 +150,7 @@
             <dependency>
                 <groupId>net.logstash.logback</groupId>
                 <artifactId>logstash-logback-encoder</artifactId>
-                <version>4.11</version>
+                <version>7.3</version>
             </dependency>
             <dependency>
                 <artifactId>spring-boot-starter-actuator</artifactId>
@@ -164,7 +159,7 @@
             <dependency>
                 <groupId>de.codecentric</groupId>
                 <artifactId>spring-boot-admin-starter-client</artifactId>
-                <version>2.7.10</version>
+                <version>2.7.14</version>
             </dependency>
             <dependency>
                 <artifactId>micrometer-registry-prometheus</artifactId>
@@ -188,7 +183,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-config-client</artifactId>
-                <version>3.1.4</version>
+                <version>4.1.1</version>
             </dependency>
     </dependencies>
     <dependencyManagement>
@@ -210,7 +205,7 @@
                 <version>3.1.4</version>
                 <configuration>
                     <to>
-                        <image>repo.sadad.co.ir/repository/baam-docker-registry/scheduler</image>
+                        <image>scheduler</image>
                         <tags>
                             <tag>${project.version}</tag>
                             <tag>latest</tag>
@@ -264,27 +259,4 @@
             </plugin>
         </plugins>
     </build>
-    <scm>
-        <connection>scm:git:https://vcs.sadad.co.ir/scm/payment/bmi-api.git</connection>
-        <developerConnection>scm:git:https://vcs.sadad.co.ir/scm/payment/bmi-api.git
-        </developerConnection>
-        <url>https://vcs.sadad.co.ir/scm/payment/bmi-api.git</url>
-    </scm>
-    <distributionManagement>
-        <repository>
-            <id>groups-public</id>
-            <name>Nexus Releases</name>
-            <url>https://repo.sadad.co.ir/repository/baam-maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>groups-public</id>
-            <name>Nexus Snapshot</name>
-            <url>https://repo.sadad.co.ir/repository/baam-maven-snapshots/</url>
-        </snapshotRepository>
-        <site>
-            <id>groups-public</id>
-            <name>Nexus Sites</name>
-            <url>https://repo.sadad.co.ir/repository/baam-maven-group/</url>
-        </site>
-    </distributionManagement>
 </project>

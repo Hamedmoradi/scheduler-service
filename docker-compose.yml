@@ -1,7 +1,7 @@
 version: '3'
 services:
   scheduler:
-    image:  repo.sadad.co.ir/repository/baam-docker-registry/scheduler:BUILD_NUMBER
+    image:  scheduler:BUILD_NUMBER
     container_name: scheduler
     restart: always
     environment:

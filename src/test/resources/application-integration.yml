@@ -14,13 +14,13 @@ spring:
 
 feign:
   client:
-    eb-url: https://eb.bmi.ir
+    eb-url: https://localhost:5616
     sso-url: 192.168.53.58:9080
 
 secretKeyLocation: /opt/configs/
 bmi:
   oauth2:
-    excluded-urls: /api/agreements/audit,/v3/api-docs/**,/swagger-ui/**:*,/h2/**:*,/swagger-ui.html:*,/webjars/**:*,/v2/**:*,/swagger-resources/**:*,/actuator/**:*,/actuator/prometheus/**:*,/trace/**:*,/enterprisebaamapi/h2/**:*,/enterprisebaamapi/swagger-ui.html:*,/enterprisebaamapi/webjars/**:*,/enterprisebaamapi/v2/**:*,/enterprisebaamapi/swagger-resources/**:*,/enterprisebaamapi/actuator/**:*,/enterprisebaamapi/actuator/prometheus/**:*,/enterprisebaamapi/trace/**:*
+    excluded-urls: /api/agreements/audit,/v3/api-docs/**,/swagger-ui/**:*,/h2/**:*,/swagger-ui.html:*,/webjars/**:*,/v2/**:*,/swagger-resources/**:*,/actuator/**:*,/actuator/prometheus/**:*,/trace/**:*
 
 sso:
   grant-type: client_credentials
