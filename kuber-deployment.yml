@@ -17,7 +17,7 @@ spec:
         app: scheduler
     spec:
       containers:
-        - image:  repo.sadad.co.ir/repository/baam-docker-registry/scheduler:0.0.1-SNAPSHOT
+        - image:  scheduler:0.0.1-SNAPSHOT
           name: scheduler
           args: ['application.properties']
           ports:

@@ -11,7 +11,7 @@
     </File>
   </Appenders>
   <Loggers>
-    <Logger additivity="false" level="debug" name="ir.baam">
+    <Logger additivity="false" level="debug" name="com.service">
       <AppenderRef ref="LogToFile"/>
       <AppenderRef ref="LogToConsole"/>
     </Logger>
