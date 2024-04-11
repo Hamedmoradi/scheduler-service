@@ -24,11 +24,9 @@
         <java.version>11</java.version>
         <oracle-driver.version>21.3.0.0</oracle-driver.version>
         <spring-cloud.version>2020.0.3</spring-cloud.version>
-        <hazelcast.version>3.11.4</hazelcast.version><<<<<<< snyk-upgrade-932b9d1e664bbecbce82e34491b9e17d
-102
- 
-
-        <testng.version>7.5.1</testng.version>
+        <bmi-identity.version>1.2.0</bmi-identity.version>
+        <hazelcast.version>3.11.4</hazelcast.version>
+        <testng.version>7.8.0</testng.version>
         <junit.jupiter.version>5.3.2</junit.jupiter.version>
         <junit.platform.version>1.8.1</junit.platform.version>
         <h2.version>1.4.200</h2.version>
